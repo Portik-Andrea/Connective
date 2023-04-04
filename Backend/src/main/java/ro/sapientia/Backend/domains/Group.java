@@ -31,4 +31,36 @@ public class Group {
 
     public Group() {
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getGroupName() {
+        return groupName;
+    }
+
+    public void setGroupName(String groupName) {
+        this.groupName = groupName;
+    }
+
+    public Set<User> getMembers() {
+        return members;
+    }
+
+    public void setMembers(Set<User> members) {
+        this.members = members;
+    }
+
+    public Set<GroupInformation> getInformation() {
+        return information;
+    }
+
+    public void setInformation(Set<GroupInformation> information) {
+        this.information = information;
+    }
 }

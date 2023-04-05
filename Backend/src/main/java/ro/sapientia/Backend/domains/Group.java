@@ -63,4 +63,12 @@ public class Group {
     public void setInformation(Set<GroupInformation> information) {
         this.information = information;
     }
+
+    public void addInformation(GroupInformation groupInformation){
+        boolean result = this.information.add(groupInformation);
+        if(result){
+            this.members.add(groupInformation.getUser());
+            groupInformation.getUser().addGroup(this);
+        }
+    }
 }

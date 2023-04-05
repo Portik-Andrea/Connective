@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Entity
@@ -33,7 +34,7 @@ public class User {
     @Column(name = "type")
     private Integer type;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne()
     @JoinColumn(name = "department_id")
     private Department department;
 
@@ -65,6 +66,15 @@ public class User {
     private Set<GroupInformation> information = new HashSet<>();
 
     public User() {
+    }
+
+    public User(String firstName, String lastName, String email, Integer type, Department department) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.type = type;
+        this.department = department;
+
     }
 
     public Long getId() {
@@ -185,5 +195,13 @@ public class User {
 
     public void removeTask(Task task){
         tasks.remove(task);
+    }
+
+    public void addGroup(Group group){
+        groups.add(group);
+    }
+
+    public void addGroupInformation(GroupInformation groupInformation){
+        boolean result = information.add(groupInformation);
     }
 }

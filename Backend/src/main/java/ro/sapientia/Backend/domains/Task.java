@@ -51,6 +51,17 @@ public class Task {
     public Task() {
     }
 
+    public Task(String title, String description, User creatorUser, Long createdTime, Priority priority, Long deadline, Status status, Integer progress) {
+        this.title = title;
+        this.description = description;
+        this.creatorUser = creatorUser;
+        this.createdTime = createdTime;
+        this.priority = priority;
+        this.deadline = deadline;
+        this.status = status;
+        this.progress = progress;
+    }
+
     public Long getTaskId() {
         return taskId;
     }

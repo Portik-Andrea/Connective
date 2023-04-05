@@ -43,6 +43,7 @@ public class GroupInformation  {
 
     public void setUser(User user) {
         this.user = user;
+        user.addGroupInformation(this);
     }
 
     public Group getGroup() {
@@ -51,6 +52,7 @@ public class GroupInformation  {
 
     public void setGroup(Group group) {
         this.group = group;
+        group.addInformation(this);
     }
 
     public Long getJoiningDate() {

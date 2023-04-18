@@ -162,7 +162,9 @@ public class User {
     }
 
     public void setMentor(User mentor) {
-        this.mentor = mentor;
+        if(this.type == 2 && mentor.getType() == 1){
+            this.mentor = mentor;
+        }
     }
 
     public Set<Task> getTasks() {
@@ -203,5 +205,29 @@ public class User {
 
     public void addGroupInformation(GroupInformation groupInformation){
         boolean result = information.add(groupInformation);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder userToString= new StringBuilder( "User{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", passwordKey='" + passwordKey + '\'' +
+                ", type=" + type +
+                ", department=" + department +
+                ", location='" + location + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", imageUrl='" + imageUrl + '\''
+                );
+        if(this.type==2 && mentor != null){
+            String appendMentor =new String( ", mentor='"+ mentor.getFirstName() + " " + mentor.getLastName()+ '\'' +"}");
+            userToString.append(appendMentor);
+        }
+        else{
+            userToString.append(", mentor nincs}");
+        }
+        return userToString.toString();
     }
 }

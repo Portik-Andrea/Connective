@@ -2,6 +2,7 @@ package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -20,7 +21,7 @@ public class GroupInformation  {
     private Group group;
 
     @Column(name = "joining_date")
-    private Long joiningDate;
+    private LocalDate joiningDate;
 
     @ManyToOne()
     @JoinColumn(name = "inviting_user_id")
@@ -55,11 +56,11 @@ public class GroupInformation  {
         group.addInformation(this);
     }
 
-    public Long getJoiningDate() {
+    public LocalDate getJoiningDate() {
         return joiningDate;
     }
 
-    public void setJoiningDate(Long joiningDate) {
+    public void setJoiningDate(LocalDate joiningDate) {
         this.joiningDate = joiningDate;
     }
 

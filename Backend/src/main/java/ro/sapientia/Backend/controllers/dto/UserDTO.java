@@ -30,7 +30,7 @@ public class UserDTO implements Serializable {
     @Positive
     private Integer type;
     @NotNull
-    private String departmentName;
+    private Long departmentId;
     @Size(max = 250)
     private String location;
 

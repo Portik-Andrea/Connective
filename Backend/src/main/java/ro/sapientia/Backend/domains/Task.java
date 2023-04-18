@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import java.time.LocalDate;
 
 @Entity
 @Table(name = "tasks")
@@ -31,14 +32,14 @@ public class Task {
 
     @Column(name = "created_time")
     @NotEmpty(message = "The created time is mandatory")
-    private Long createdTime;
+    private LocalDate createdTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private Priority priority;
 
     @Column(name = "deadline")
-    private Long deadline;
+    private LocalDate deadline;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -51,7 +52,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, String description, User creatorUser, Long createdTime, Priority priority, Long deadline, Status status, Integer progress) {
+    public Task(String title, String description, User creatorUser, LocalDate createdTime, Priority priority, LocalDate deadline, Status status, Integer progress) {
         this.title = title;
         this.description = description;
         this.creatorUser = creatorUser;
@@ -107,11 +108,11 @@ public class Task {
         this.creatorUser = creatorUser;
     }
 
-    public Long getCreatedTime() {
+    public LocalDate getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(Long createdTime) {
+    public void setCreatedTime(LocalDate createdTime) {
         this.createdTime = createdTime;
     }
 
@@ -123,11 +124,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public Long getDeadline() {
+    public LocalDate getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(Long deadline) {
+    public void setDeadline(LocalDate deadline) {
         this.deadline = deadline;
     }
 

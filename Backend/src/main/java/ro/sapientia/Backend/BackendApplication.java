@@ -46,14 +46,26 @@ public class BackendApplication {
 
 
 			}
-			// fetch all users
-			log.info("Users found with findAll():");
-			log.info("-------------------------------");
-			repository.findAll().forEach( e -> log.info(e.toString()));
-			log.info("Exists user by email: andras.emma@sonrisa.hu");
-			log.info("\tResult: " +
-					repository.existsByEmail("andras.emma@sonrisa.hu"));
+//			// fetch all users
+//			log.info("Users found with findAll():");
+//			log.info("-------------------------------");
+//			repository.findAll().forEach( e -> log.info(e.toString()));
+//			log.info("Exists user by email: andras.emma@sonrisa.hu");
+//			log.info("\tResult: " +
+//					repository.existsByEmail("andras.emma@sonrisa.hu"));
 
+			// set mentor
+			Optional<User> mentee = repository.findById(2L);
+			Optional<User> mentor = repository.findById(1L);
+			if(mentee.isPresent() && mentor.isPresent()){
+				log.info("Mentee:" + mentee.get().toString());
+				log.info("Mentor:" + mentor.get().toString());
+				mentee.get().setMentor(mentor.get());
+				repository.save(mentee.get());
+			}
+			log.info("**************************************************************************");
+			repository.findAll().forEach( e -> log.info(e.toString()));
+			log.info("**************************************************************************");
 		};
 	}
 

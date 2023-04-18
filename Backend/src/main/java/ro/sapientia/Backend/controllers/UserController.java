@@ -38,8 +38,7 @@ public class UserController {
     @PostMapping("/adduser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO){
         Department department = departmentService.findById(userDTO.getDepartmentId());
-        User mentor = userService.findUserByID(userDTO.getMentorId());
-        User user = UserMapper.convertDtoToModel(userDTO,department,mentor);
+        User user = UserMapper.convertDtoToModel(userDTO,department);
         User result = userService.addUser(user);
         return new ResponseEntity<>(
                 "Success",

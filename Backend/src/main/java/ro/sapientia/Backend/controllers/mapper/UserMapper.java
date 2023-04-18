@@ -20,7 +20,7 @@ public class UserMapper {
         return userDTO;
     }
 
-    public static User convertDtoToModel(UserDTO userDTO, Department department,User mentor){
+    public static User convertDtoToModel(UserDTO userDTO, Department department){
         User user = new User();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
@@ -29,9 +29,6 @@ public class UserMapper {
         user.setDepartment(department);
         user.setLocation(userDTO.getLocation());
         user.setPhoneNumber(userDTO.getPhoneNumber());
-        if(userDTO.getType() == 2 && mentor!=null){
-            user.setMentor(mentor);
-        }
         return user;
     }
 

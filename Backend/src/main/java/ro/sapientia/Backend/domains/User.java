@@ -1,6 +1,7 @@
 package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
+import lombok.ToString;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.validation.constraints.NotEmpty;
@@ -52,8 +53,6 @@ public class User {
     @JoinColumn(name = "mentor_id")
     private User mentor;
 
-    //private String token;
-
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
             orphanRemoval = true)
@@ -64,6 +63,14 @@ public class User {
 
     @OneToMany(mappedBy = "user")
     private Set<GroupInformation> information = new HashSet<>();
+
+    @Column
+    @ToString.Exclude
+    @NotEmpty(message = "password is mandatory")
+    private String password;
+
+    @ToString.Exclude
+    private String token;
 
     public User() {
     }
@@ -162,9 +169,7 @@ public class User {
     }
 
     public void setMentor(User mentor) {
-        if(this.type == 2 && mentor.getType() == 1){
-            this.mentor = mentor;
-        }
+        this.mentor = mentor;
     }
 
     public Set<Task> getTasks() {
@@ -205,6 +210,12 @@ public class User {
 
     public void addGroupInformation(GroupInformation groupInformation){
         boolean result = information.add(groupInformation);
+    }
+
+    public void updateMentor(User mentor){
+        if(this.type == 2 && mentor.getType() == 1){
+            this.mentor = mentor;
+        }
     }
 
     @Override

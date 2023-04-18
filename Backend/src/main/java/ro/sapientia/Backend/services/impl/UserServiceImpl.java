@@ -33,21 +33,16 @@ public class UserServiceImpl implements UserService {
     @Override
     @Transactional(readOnly = false)
     public User addUser(User user) {
-        User mentor = user.getMentor();
-        if(user.getType() == 2)
-            if(mentor.getType()==1) {
-                boolean existEmail = userRepository.existsByEmail(user.getEmail());
-                if (existEmail) {
-                    throw new IllegalEmailException(user.getEmail());
-                } else {
-                    return userRepository.save(user);
-                }
+        if(user.getType() == 2 || user.getType() == 1) {
+            boolean existEmail = userRepository.existsByEmail(user.getEmail());
+            if (existEmail) {
+                throw new IllegalEmailException(user.getEmail());
+            } else {
+                return userRepository.save(user);
             }
-            else {
-                throw new IllegalUserTypeException(mentor.getType(), "user is not mentor");
-            }
+        }
         else{
-            throw new IllegalUserTypeException(user.getType(), "user is not mentee");
+            throw new IllegalUserTypeException(user.getType());
         }
     }
 }

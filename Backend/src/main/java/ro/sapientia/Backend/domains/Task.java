@@ -24,11 +24,11 @@ public class Task {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "assigned_to_user_id")
-    private User assignedToUser;
+    private UserEntity assignedToUser;
 
     @OneToOne(cascade = CascadeType.ALL, optional = false)
     @NotEmpty(message = "Creator is mandatory")
-    private User creatorUser;
+    private UserEntity creatorUser;
 
     @Column(name = "created_time")
     @NotEmpty(message = "The created time is mandatory")
@@ -52,7 +52,7 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, String description, User creatorUser, LocalDate createdTime, Priority priority, LocalDate deadline, Status status, Integer progress) {
+    public Task(String title, String description, UserEntity creatorUser, LocalDate createdTime, Priority priority, LocalDate deadline, Status status, Integer progress) {
         this.title = title;
         this.description = description;
         this.creatorUser = creatorUser;
@@ -87,24 +87,24 @@ public class Task {
         this.description = description;
     }
 
-    public User getAssignedToUser() {
+    public UserEntity getAssignedToUser() {
         return assignedToUser;
     }
 
-    public void setAssignedToUser(User assignedToUser) {
+    public void setAssignedToUser(UserEntity assignedToUser) {
         if (this.assignedToUser != null) {
-            User oldAssignedToUser = this.assignedToUser;
+            UserEntity oldAssignedToUser = this.assignedToUser;
             oldAssignedToUser.removeTask(this);
         }
         this.assignedToUser = assignedToUser;
         assignedToUser.addTask(this);
     }
 
-    public User getCreatorUser() {
+    public UserEntity getCreatorUser() {
         return creatorUser;
     }
 
-    public void setCreatorUser(User creatorUser) {
+    public void setCreatorUser(UserEntity creatorUser) {
         this.creatorUser = creatorUser;
     }
 

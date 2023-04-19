@@ -5,8 +5,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.sapientia.Backend.domains.Department;
-import ro.sapientia.Backend.domains.User;
+import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.repositories.DepartmentRepository;
 import ro.sapientia.Backend.repositories.UserRepository;
 
@@ -32,16 +34,16 @@ public class BackendApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo_repository2(UserRepository repository,DepartmentRepository departmentRepository) {
+	public CommandLineRunner demo_repository2(UserRepository repository, DepartmentRepository departmentRepository) {
 		return (args) -> {
 			if( repository.count() == 0 ) {
 				Optional<Department> department = departmentRepository.findByDepartmentName("Developer");
 				// save a few users
 				if(department.isPresent()){
-					repository.save(new User("Emese", "Moldovan","moldovan.emese@sonrisa.hu",1,department.get()));
-					repository.save(new User("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",2,department.get()));
-					repository.save(new User("Barna", "Petho","peto.barna@sonrisa.hu",1,department.get()));
-					repository.save(new User("Istvan", "Balint","balint.istvan@sonrisa.hu",2,department.get()));
+					repository.save(new UserEntity("Emese", "Moldovan","moldovan.emese@sonrisa.hu",1,department.get()));
+					repository.save(new UserEntity("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",2,department.get()));
+					repository.save(new UserEntity("Barna", "Petho","peto.barna@sonrisa.hu",1,department.get()));
+					repository.save(new UserEntity("Istvan", "Balint","balint.istvan@sonrisa.hu",2,department.get()));
 				}
 
 
@@ -55,8 +57,8 @@ public class BackendApplication {
 //					repository.existsByEmail("andras.emma@sonrisa.hu"));
 
 			// set mentor
-			Optional<User> mentee = repository.findById(2L);
-			Optional<User> mentor = repository.findById(1L);
+			Optional<UserEntity> mentee = repository.findById(2L);
+			Optional<UserEntity> mentor = repository.findById(1L);
 			if(mentee.isPresent() && mentor.isPresent()){
 				log.info("Mentee:" + mentee.get().toString());
 				log.info("Mentor:" + mentor.get().toString());
@@ -67,6 +69,11 @@ public class BackendApplication {
 			repository.findAll().forEach( e -> log.info(e.toString()));
 			log.info("**************************************************************************");
 		};
+	}
+
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return new BCryptPasswordEncoder();
 	}
 
 }

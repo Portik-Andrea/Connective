@@ -6,8 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.controllers.mapper.UserMapper;
-import ro.sapientia.Backend.domains.Department;
-import ro.sapientia.Backend.domains.User;
+import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.services.DepartmentService;
 import ro.sapientia.Backend.services.UserService;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
@@ -28,7 +27,7 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public UserDTO getUserById(@PathVariable("userId") @Positive Long id){
-        User user = userService.findUserByID(id);
+        UserEntity user = userService.findUserByID(id);
         if(user == null){
             throw new UserNotFoundException(id);
         }
@@ -37,9 +36,7 @@ public class UserController {
 
     @PostMapping("/adduser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO){
-        Department department = departmentService.findById(userDTO.getDepartmentId());
-        User user = UserMapper.convertDtoToModel(userDTO,department);
-        User result = userService.addUser(user);
+        UserEntity result = userService.addUser(userDTO);
         return new ResponseEntity<>(
                 "Success",
                 HttpStatus.OK);

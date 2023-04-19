@@ -14,7 +14,7 @@ public class GroupInformation  {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private UserEntity user;
 
     @ManyToOne
     @JoinColumn(name = "group_id")
@@ -25,7 +25,7 @@ public class GroupInformation  {
 
     @ManyToOne()
     @JoinColumn(name = "inviting_user_id")
-    private User invitingUser;
+    private UserEntity invitingUser;
 
     public GroupInformation() {
     }
@@ -38,11 +38,11 @@ public class GroupInformation  {
         this.groupInformationId = id;
     }
 
-    public User getUser() {
+    public UserEntity getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UserEntity user) {
         this.user = user;
         user.addGroupInformation(this);
     }
@@ -64,11 +64,11 @@ public class GroupInformation  {
         this.joiningDate = joiningDate;
     }
 
-    public User getAdderUserId() {
+    public UserEntity getAdderUserId() {
         return invitingUser;
     }
 
-    public void setAdderUserId(User adderUser) {
+    public void setAdderUserId(UserEntity adderUser) {
         this.invitingUser = adderUser;
     }
 

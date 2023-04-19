@@ -2,16 +2,14 @@ package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
 import lombok.ToString;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
 
 @Entity
 @Table(name = "users")
-public class User {
+public class UserEntity {
     @Id
     @SequenceGenerator(name = "user_id_gen", sequenceName = "user_id_seq", initialValue = 1)
     @GeneratedValue(generator = "user_id_gen")
@@ -51,7 +49,7 @@ public class User {
     //egy mentor tobb mentoralt vagy egy mentor egy mentoralt ??
     @OneToOne
     @JoinColumn(name = "mentor_id")
-    private User mentor;
+    private UserEntity mentor;
 
     @OneToMany(cascade = CascadeType.ALL,
             fetch = FetchType.EAGER,
@@ -72,10 +70,10 @@ public class User {
     @ToString.Exclude
     private String token;
 
-    public User() {
+    public UserEntity() {
     }
 
-    public User(String firstName, String lastName, String email, Integer type, Department department) {
+    public UserEntity(String firstName, String lastName, String email, Integer type, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -164,11 +162,11 @@ public class User {
         this.imageUrl = imageUrl;
     }
 
-    public User getMentor() {
+    public UserEntity getMentor() {
         return mentor;
     }
 
-    public void setMentor(User mentor) {
+    public void setMentor(UserEntity mentor) {
         this.mentor = mentor;
     }
 
@@ -196,6 +194,22 @@ public class User {
         this.information = information;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
     public void addTask(Task task){
         tasks.add(task);
     }
@@ -212,11 +226,18 @@ public class User {
         boolean result = information.add(groupInformation);
     }
 
-    public void updateMentor(User mentor){
+    public void updateMentor(UserEntity mentor){
         if(this.type == 2 && mentor.getType() == 1){
             this.mentor = mentor;
         }
     }
+
+    public void updateDepartment(Department department){
+        if(department.getDepartmentId() != null){
+            this.department=department;
+        }
+    }
+
 
     @Override
     public String toString() {

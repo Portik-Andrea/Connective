@@ -2,16 +2,18 @@ package ro.sapientia.Backend.controllers.mapper;
 
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.domains.Department;
-import ro.sapientia.Backend.domains.User;
+import ro.sapientia.Backend.domains.UserEntity;
 
 public class UserMapper {
-    public static UserDTO convertModelToDTO(User user){
+    public static UserDTO convertModelToDTO(UserEntity user){
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstName(user.getFirstName());
         userDTO.setLastName(user.getLastName());
         userDTO.setEmail(user.getEmail());
         userDTO.setType(user.getType());
-        userDTO.setDepartmentId(user.getDepartment().getDepartmentId());
+        if(user.getDepartment()!=null){
+            userDTO.setDepartmentId(user.getDepartment().getDepartmentId());
+        }
         userDTO.setLocation(user.getLocation());
         userDTO.setPhoneNumber(user.getPhoneNumber());
         if(userDTO.getType() == 2 && user.getMentor()!= null){
@@ -20,8 +22,8 @@ public class UserMapper {
         return userDTO;
     }
 
-    public static User convertDtoToModel(UserDTO userDTO, Department department){
-        User user = new User();
+    public static UserEntity convertDtoToModel(UserDTO userDTO, Department department){
+        UserEntity user = new UserEntity();
         user.setFirstName(userDTO.getFirstName());
         user.setLastName(userDTO.getLastName());
         user.setEmail(userDTO.getEmail());

@@ -4,7 +4,6 @@ import jakarta.persistence.*;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 
 @Entity
@@ -24,7 +23,7 @@ public class Group {
             joinColumns = {@JoinColumn(name = "group_id")},
             inverseJoinColumns = {@JoinColumn(name = "user_id")}
     )
-    private Set<User> members = new HashSet<>();
+    private Set<UserEntity> members = new HashSet<>();
 
     @OneToMany(mappedBy = "group")
     private Set<GroupInformation> information = new HashSet<>();
@@ -48,11 +47,11 @@ public class Group {
         this.groupName = groupName;
     }
 
-    public Set<User> getMembers() {
+    public Set<UserEntity> getMembers() {
         return members;
     }
 
-    public void setMembers(Set<User> members) {
+    public void setMembers(Set<UserEntity> members) {
         this.members = members;
     }
 

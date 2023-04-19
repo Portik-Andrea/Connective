@@ -1,9 +1,10 @@
 package ro.sapientia.Backend.services;
 
-import ro.sapientia.Backend.domains.User;
+import ro.sapientia.Backend.controllers.dto.UserDTO;
+import ro.sapientia.Backend.domains.UserEntity;
 
 public interface UserService {
-    User findUserByID(Long id);
+    UserEntity findUserByID(Long id);
 
-    User addUser(User user);
+    UserEntity addUser(UserDTO userDTO);
 }

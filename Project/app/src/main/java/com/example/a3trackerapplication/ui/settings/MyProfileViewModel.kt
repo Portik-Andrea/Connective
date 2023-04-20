@@ -29,11 +29,11 @@ class MyProfileViewModel(val repository: UserRepository): ViewModel() {
             try {
                 val response = repository.getMyUser(MyApplication.token)
                 Log.d("xxx", "GetMy user response $response")
-                if (response.isSuccessful == true) {
+                if (response?.isSuccessful == true) {
                     Log.d("xxx", "GetMy user response ${response.body()}")
                     user.value = response.body()
                 } else {
-                    Log.d("xxx", "GetMy user error response ${response.errorBody()}")
+                    Log.d("xxx", "GetMy user error response ${response?.errorBody()}")
                 }
 
             } catch (ex: Exception) {

@@ -1,5 +1,6 @@
 package ro.sapientia.Backend.controllers;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -19,6 +20,7 @@ import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
 import javax.validation.Valid;
 
+@Slf4j
 @RestController
 @RequestMapping("api/v1/public")
 public class LoginRegisterController {
@@ -36,15 +38,17 @@ public class LoginRegisterController {
     @PostMapping("/login")
     public LoginResponse login(
             @RequestBody @Valid final LoginRequest authenticationRequest) {
-
+        log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getEmail(),
                             authenticationRequest.getPassword()));
+            log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         } catch (final BadCredentialsException ex) {
-            //log.info("Bad credentials");
-            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED);
+            log.info("Bad credentials");
+            log.info("-----------------------------------------------------");
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Bad credentials");
         }
         final UserDetails userDetails =
                 userDetailsService.loadUserByUsername(authenticationRequest.getEmail());

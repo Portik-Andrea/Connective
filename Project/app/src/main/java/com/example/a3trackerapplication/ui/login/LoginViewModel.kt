@@ -27,16 +27,16 @@ class LoginViewModel(val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repository.login(request)
-                if (response.isSuccessful) {
+                if (response?.isSuccessful == true) {
 
-                    MyApplication.token = response.body()!!.token
+                    MyApplication.token = response?.body()!!.token
                     //MyApplication.deadline = response.body()!!.deadline
 
                     loginResult.value = LoginResult.SUCCESS
                     Log.i("xxx", "Login body" + response.body().toString())
                 } else {
                     loginResult.value = LoginResult.INVALID_CREDENTIALS
-                    Log.i("xxx", "Login invalid credentials " + response.errorBody().toString()  )
+                    Log.i("xxx", "Login invalid credentials " + (response.toString()))
                 }
             } catch (e: Exception) {
                 loginResult.value = LoginResult.UNKNOWN_ERROR

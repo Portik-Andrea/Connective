@@ -1,9 +1,12 @@
 package com.example.a3trackerapplication.models
 
+import com.google.gson.annotations.SerializedName
 import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
+//@JsonClass(generateAdapter = true)
 data class LoginResponse (
-    var userId: Long,
+    @SerializedName("userId")
+    var userId: Int,
+    @SerializedName("token")
     var token: String
 )

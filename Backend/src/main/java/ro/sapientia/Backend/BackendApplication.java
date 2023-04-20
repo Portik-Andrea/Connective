@@ -40,10 +40,10 @@ public class BackendApplication {
 				Optional<Department> department = departmentRepository.findByDepartmentName("Developer");
 				// save a few users
 				if(department.isPresent()){
-					repository.save(new UserEntity("Emese", "Moldovan","moldovan.emese@sonrisa.hu",1,department.get()));
-					repository.save(new UserEntity("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",2,department.get()));
-					repository.save(new UserEntity("Barna", "Petho","peto.barna@sonrisa.hu",1,department.get()));
-					repository.save(new UserEntity("Istvan", "Balint","balint.istvan@sonrisa.hu",2,department.get()));
+					repository.save(new UserEntity("Emese", "Moldovan","moldovan.emese@sonrisa.hu",1,department.get(),"password"));
+					repository.save(new UserEntity("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",2,department.get(),"password1"));
+					repository.save(new UserEntity("Barna", "Petho","peto.barna@sonrisa.hu",1,department.get(),"password2"));
+					repository.save(new UserEntity("Istvan", "Balint","balint.istvan@sonrisa.hu",2,department.get(),"password3"));
 				}
 
 

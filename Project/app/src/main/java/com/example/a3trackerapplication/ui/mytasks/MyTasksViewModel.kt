@@ -27,11 +27,13 @@ class MyTasksViewModel(val repository: UserRepository): ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repository.getTasks(MyApplication.token)
-                if(response.isSuccessful) {
+                if(response?.isSuccessful == true) {
                     myTasks.value = response.body()
                     Log.d("xxx", "GetMy tasks response ${response.body()}")
                 } else{
-                    Log.i("xxx-uvm", response.message())
+                    if (response != null) {
+                        Log.i("xxx-uvm", response.message())
+                    }
                 }
             } catch (e: Exception) {
                 Log.i("xxx", e.toString())

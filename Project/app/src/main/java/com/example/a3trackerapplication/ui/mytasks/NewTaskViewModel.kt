@@ -31,12 +31,12 @@ class NewTaskViewModel(val repository: UserRepository) : ViewModel()  {
         viewModelScope.launch {
             try {
                 val response = repository.createTask(MyApplication.token,request)
-                if (response.isSuccessful) {
+                if (response?.isSuccessful == true) {
                     createTaskResult.value = "SUCCESS"
                     Log.d("xxx", "Login body" + response.body().toString())
                 } else {
                     createTaskResult.value = "INVALID_CREDENTIALS"
-                    Log.i("xxx", "Login invalid credentials " + response.errorBody().toString()  )
+                    Log.i("xxx", "Login invalid credentials " + response?.errorBody().toString()  )
                 }
             } catch (e: Exception) {
                 createTaskResult.value = "UNKNOWN_ERROR"

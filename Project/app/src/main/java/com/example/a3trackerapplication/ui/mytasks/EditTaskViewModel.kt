@@ -24,12 +24,12 @@ class EditTaskViewModel(val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repository.updateTask(MyApplication.token,request)
-                if (response.isSuccessful) {
+                if (response?.isSuccessful == true) {
                     editTaskResult.value = LoginResult.SUCCESS
                     Log.d("xxx", "Login body" + response.body().toString())
                 } else {
                     editTaskResult.value = LoginResult.INVALID_CREDENTIALS
-                    Log.i("xxx", "Login invalid credentials " + response.errorBody().toString()  )
+                    Log.i("xxx", "Login invalid credentials " + response?.errorBody().toString()  )
                 }
             } catch (e: Exception) {
                 editTaskResult.value = LoginResult.UNKNOWN_ERROR

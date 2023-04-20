@@ -53,12 +53,12 @@ class SplashActivity : AppCompatActivity() {
             try {
                 val response = UserRepository().getMyUser(MyApplication.token)
                 Log.d("xxx", "GetMy user response $response")
-                if (response.isSuccessful == true) {
+                if (response?.isSuccessful == true) {
                     Log.d("xxx", "GetMy user token ${response.body()}")
                     tokenIsValid=true
                     response.body()
                 } else {
-                    Log.d("xxx", "GetMy user token error response ${response.errorBody()}")
+                    Log.d("xxx", "GetMy user token error response ${response?.errorBody()}")
                 }
 
             } catch (ex: Exception) {

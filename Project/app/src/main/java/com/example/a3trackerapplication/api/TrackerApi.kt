@@ -27,4 +27,9 @@ interface TrackerApi {
     @POST("/task/update")
     suspend fun updateTask(@Header("token") token: String, @Body request: EditTaskRequest): Response<String>
 
+    companion object {
+        fun getApi(): TrackerApi? {
+            return RetrofitInstance.client?.create(TrackerApi::class.java)
+        }
+    }
 }

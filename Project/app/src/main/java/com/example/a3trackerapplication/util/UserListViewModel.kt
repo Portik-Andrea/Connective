@@ -26,11 +26,13 @@ class UserListViewModel(val repository: UserRepository) : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = repository.getUsers(MyApplication.token)
-                if (response.isSuccessful) {
+                if (response?.isSuccessful == true) {
                     userList.value = response.body()!!
                     Log.d("xxx", "GetMy user list response ${response.body()}")
                 } else {
-                    Log.i("xxx-uvm", response.message())
+                    if (response != null) {
+                        Log.i("xxx-uvm", response.message())
+                    }
                 }
             } catch (e: Exception) {
                 Log.i("xxx", e.toString())

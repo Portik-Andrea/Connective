@@ -27,9 +27,6 @@ public class UserEntity {
     @NotEmpty(message = "email is mandatory")
     private String email;
 
-    @Column(name = "password_key")
-    private String passwordKey;
-
     @Column(name = "type")
     private Integer type;
 
@@ -79,7 +76,15 @@ public class UserEntity {
         this.email = email;
         this.type = type;
         this.department = department;
+    }
 
+    public UserEntity(String firstName, String lastName, String email, Integer type, Department department, String password) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.email = email;
+        this.type = type;
+        this.department = department;
+        this.password=password;
     }
 
     public Long getId() {
@@ -112,14 +117,6 @@ public class UserEntity {
 
     public void setEmail(String email) {
         this.email = email;
-    }
-
-    public String getPasswordKey() {
-        return passwordKey;
-    }
-
-    public void setPasswordKey(String passwordKey) {
-        this.passwordKey = passwordKey;
     }
 
     public Integer getType() {
@@ -246,7 +243,7 @@ public class UserEntity {
                 ", firstName='" + firstName + '\'' +
                 ", lastName='" + lastName + '\'' +
                 ", email='" + email + '\'' +
-                ", passwordKey='" + passwordKey + '\'' +
+                ", password='" + password + '\'' +
                 ", type=" + type +
                 ", department=" + department +
                 ", location='" + location + '\'' +

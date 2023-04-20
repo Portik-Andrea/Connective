@@ -42,4 +42,13 @@ public class UserController {
                 HttpStatus.OK);
     }
 
+//    @GetMapping("/user")
+//    public UserDTO getUser(){
+//
+//        UserEntity user = userService.findUserByID(id);
+//        if(user == null){
+//            throw new UserNotFoundException(id);
+//        }
+//        return UserMapper.convertModelToDTO(user);
+//    }
 }

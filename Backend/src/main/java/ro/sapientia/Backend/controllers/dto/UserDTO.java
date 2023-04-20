@@ -13,6 +13,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class UserDTO implements Serializable {
 
+
     @NotNull
     @Size(max = 50)
     private String firstName;

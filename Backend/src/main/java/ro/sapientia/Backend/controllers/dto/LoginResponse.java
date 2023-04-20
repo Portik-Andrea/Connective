@@ -2,15 +2,27 @@ package ro.sapientia.Backend.controllers.dto;
 
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
+import java.util.Date;
+
 @Data
 public class LoginResponse {
-    private String accessToken;
+    private Long userId;
+    private String token;
 
-    public String getAccessToken() {
-        return accessToken;
+    public Long getUserId() {
+        return userId;
     }
 
-    public void setAccessToken(String accessToken) {
-        this.accessToken = accessToken;
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String accessToken) {
+        this.token = accessToken;
     }
 }

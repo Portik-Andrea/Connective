@@ -63,6 +63,20 @@ public class SecurityUserDetailsService implements UserDetailsService {
         userRepository.save( user );
     }
     public void saveUserToken(String email, String token){
-        //...}
+        Optional<UserEntity> user = userRepository.findByEmail(email);
+
+        if( !user.isPresent() ){
+            throw new UsernameNotFoundException(email);
+        }
+        user.get().setToken(token);
+        userRepository.save( user.get() );
+    }
+
+    public Long sendUserId(String token){
+        Optional<UserEntity> user = userRepository.findByToken(token);
+        if( !user.isPresent() ){
+            throw new UsernameNotFoundException(token);
+        }
+        return user.get().getId();
     }
 }

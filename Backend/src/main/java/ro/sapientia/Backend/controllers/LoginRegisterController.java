@@ -50,8 +50,9 @@ public class LoginRegisterController {
                 userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
         final LoginResponse loginResponse = new LoginResponse();
         String token = tokenService.generateToken(userDetails);
-        loginResponse.setAccessToken(token);
+        loginResponse.setToken(token);
         userDetailsService.saveUserToken(authenticationRequest.getEmail(), token);
+        loginResponse.setUserId(userDetailsService.sendUserId(token));
         return loginResponse;
     }
 

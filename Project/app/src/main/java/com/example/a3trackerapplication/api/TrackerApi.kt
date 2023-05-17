@@ -9,6 +9,9 @@ import retrofit2.http.Header
 import retrofit2.http.POST
 
 interface TrackerApi {
+    @GET("public/test")
+    suspend fun test(): Response<String>
+
     @POST(Constants.LOGIN_URL)
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 

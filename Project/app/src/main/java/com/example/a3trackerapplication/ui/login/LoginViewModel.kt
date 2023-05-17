@@ -23,6 +23,21 @@ class LoginViewModel(val repository: UserRepository) : ViewModel() {
 
     var loginResult: MutableLiveData<LoginResult> = MutableLiveData()
 
+    fun test(){
+        viewModelScope.launch {
+            try {
+                val response = repository.test();
+                if (response?.isSuccessful == true) {
+                    Log.i("xxx", "Login body" + response.body().toString())
+                } else {
+                    Log.i("xxx", "Login invalid credentials " + (response.toString()))
+                }
+            } catch (e: Exception) {
+                Log.i("xxx","Login error" + e.toString())
+            }
+        }
+    }
+
     fun login(request: LoginRequest) {
         viewModelScope.launch {
             try {

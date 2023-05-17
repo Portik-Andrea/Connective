@@ -43,6 +43,7 @@ class LoginFragment : Fragment() {
         emailEditText = view.findViewById(R.id.email)
         val passwordEditText: TextInputEditText = view.findViewById(R.id.password)
         val loginButton: Button = view.findViewById(R.id.loginButton)
+        val testButton: Button = view.findViewById(R.id.testButton)
 
         val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         if (!prefs.getString("email", "").equals("")) {
@@ -61,6 +62,9 @@ class LoginFragment : Fragment() {
             } else {
                 loginViewModel.login(LoginRequest(email, password))
             }
+        }
+        testButton.setOnClickListener {
+            loginViewModel.test()
         }
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {

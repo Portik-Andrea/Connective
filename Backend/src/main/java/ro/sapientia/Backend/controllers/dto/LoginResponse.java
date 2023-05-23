@@ -7,16 +7,16 @@ import java.util.Date;
 
 @Data
 public class LoginResponse {
-    private Long userId;
+    //private Long userId;
     private String token;
 
-    public Long getUserId() {
+    /*public Long getUserId() {
         return userId;
     }
 
     public void setUserId(Long userId) {
         this.userId = userId;
-    }
+    }*/
 
     public String getToken() {
         return token;

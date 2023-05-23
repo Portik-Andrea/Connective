@@ -8,15 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.RecyclerView
-import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.User
-import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.util.UserListViewModel
-import com.example.a3trackerapplication.util.UserListViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -112,8 +107,8 @@ class TaskAdapter(
     private fun searchUserName(id: Long):String{
         var name = ""
         users.forEach {
-            if(it.ID== id){
-                name="${it.last_name} ${it.first_name}"
+            if(it.id== id){
+                name="${it.lastName} ${it.firstName}"
             }
         }
 

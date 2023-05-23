@@ -1,6 +1,5 @@
 package com.example.a3trackerapplication.ui.mytasks
 
-import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
@@ -169,8 +168,8 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private fun searchUserName(id: Long):String{
         var name = ""
         users?.forEach {
-            if(it.ID== id){
-                name="${it.last_name} ${it.first_name}"
+            if(it.id== id){
+                name="${it.lastName} ${it.firstName}"
             }
         }
         return name
@@ -201,7 +200,7 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             }
         }
 
-        val assignee = users?.map{ "${it.last_name} ${it.first_name}"}
+        val assignee = users?.map{ "${it.lastName} ${it.firstName}"}
         // access the spinner
         val assigneeSpinner = view.findViewById<Spinner>(R.id.assigneeUpdateSpinner)
         if (assigneeSpinner != null && assignee != null) {
@@ -224,7 +223,7 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 //                        getString(R.string.selected_item) + " " +
 //                                "" + languages[position], Toast.LENGTH_SHORT).show()
                     if(users != null){
-                        editTaskRequest.assignedToUserId = users!![position].ID
+                        editTaskRequest.assignedToUserId = users!![position].id
                     }
                 }
                 override fun onNothingSelected(parent: AdapterView<*>) {

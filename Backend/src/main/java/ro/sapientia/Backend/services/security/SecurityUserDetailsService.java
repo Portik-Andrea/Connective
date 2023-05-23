@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import ro.sapientia.Backend.controllers.dto.RegisterRequestDTO;
 import ro.sapientia.Backend.domains.Department;
 import ro.sapientia.Backend.domains.UserEntity;
+import ro.sapientia.Backend.domains.UserType;
 import ro.sapientia.Backend.repositories.DepartmentRepository;
 import ro.sapientia.Backend.repositories.UserRepository;
 import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
@@ -57,7 +58,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         user.setFirstName(registerRequest.getFirstName());
         user.setLastName(registerRequest.getLastName());
         user.setEmail(registerRequest.getEmail());
-        user.setType(registerRequest.getType());
+        user.setType(UserType.valueOf(registerRequest.getType()));
         user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
         //user.getRoles().add( roleRepository.findByName(ROLE_USER).orElseThrow() );
         userRepository.save( user );

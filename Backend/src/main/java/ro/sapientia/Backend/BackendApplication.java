@@ -9,7 +9,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.sapientia.Backend.domains.Department;
 import ro.sapientia.Backend.domains.UserEntity;
+import ro.sapientia.Backend.domains.UserType;
 import ro.sapientia.Backend.repositories.DepartmentRepository;
+import ro.sapientia.Backend.repositories.TaskRepository;
 import ro.sapientia.Backend.repositories.UserRepository;
 
 import java.util.Optional;
@@ -40,10 +42,10 @@ public class BackendApplication {
 				Optional<Department> department = departmentRepository.findByDepartmentName("Developer");
 				// save a few users
 				if(department.isPresent()){
-					repository.save(new UserEntity("Emese", "Moldovan","moldovan.emese@sonrisa.hu",1,department.get(),"password"));
-					repository.save(new UserEntity("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",2,department.get(),"password1"));
-					repository.save(new UserEntity("Barna", "Petho","peto.barna@sonrisa.hu",1,department.get(),"password2"));
-					repository.save(new UserEntity("Istvan", "Balint","balint.istvan@sonrisa.hu",2,department.get(),"password3"));
+					repository.save(new UserEntity("Emese", "Moldovan","moldovan.emese@sonrisa.hu", UserType.MENTOR,department.get(),"password"));
+					repository.save(new UserEntity("Sandor", "Ceclan","ceclan.sandor@sonrisa.hu",UserType.MENTEE,department.get(),"password1"));
+					repository.save(new UserEntity("Barna", "Petho","peto.barna@sonrisa.hu",UserType.MENTOR,department.get(),"password2"));
+					repository.save(new UserEntity("Istvan", "Balint","balint.istvan@sonrisa.hu",UserType.MENTEE,department.get(),"password3"));
 				}
 
 
@@ -74,6 +76,18 @@ public class BackendApplication {
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public CommandLineRunner task_repository(TaskRepository repository) {
+		return (args) -> {
+			if(repository.count() == 0){
+				/*repository.save(new Department("HR"));
+				repository.save(new Department("Developer"));*/
+
+			}
+
+		};
 	}
 
 }

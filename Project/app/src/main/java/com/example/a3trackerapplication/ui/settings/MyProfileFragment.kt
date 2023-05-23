@@ -1,58 +1,69 @@
 package com.example.a3trackerapplication.ui.settings
 
+import android.app.Activity
 import android.content.Intent
-import android.graphics.drawable.Drawable
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.drawable.BitmapDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.a3trackerapplication.R
+import com.example.a3trackerapplication.databinding.ActivityMainBinding
+import com.example.a3trackerapplication.databinding.FragmentMyProfileBinding
+import com.example.a3trackerapplication.models.UpdateUserRequest
+import com.example.a3trackerapplication.models.UserType
 import com.example.a3trackerapplication.repositories.UserRepository
-import java.io.File
+import java.io.ByteArrayOutputStream
+import java.util.regex.Pattern
 
 
 class MyProfileFragment : Fragment() {
     private lateinit var myProfileViewModel: MyProfileViewModel
-    private lateinit var userNameTextView: TextView
+    private lateinit var userNameEditText: EditText
     private lateinit var roleTypeTextView: TextView
-    private lateinit var emailAddrressEditText: EditText
+    private lateinit var emailAddressTextView: TextView
     private lateinit var phoneEditText: EditText
     private lateinit var locationEditText: EditText
     private lateinit var imageView: ImageView
+    private lateinit var editProfileButton: Button
+    private lateinit var selectMentorButton: Button
     private lateinit var addPhotoImageView: ImageView
 
+    var location: String? = null
+    var phoneNumber: String? = null
 
-
-    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-        uri?.let { imageView.setImageURI(uri)
-            Log.d("xxx", "GetMyImg  Image1 $uri")
-            profileImageUri = uri
-            myProfileViewModel.imageUri=uri
-            Log.d("xxx", "GetMyImg  Image2 ${myProfileViewModel.imageUri}")
+    private val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
+        if (result.resultCode == Activity.RESULT_OK){
+            if (result.data != null){
+                val imageUri = result.data!!.data
+                imageView.setImageURI(imageUri)
+            }
         }
     }
-    private var profileImageUri: Uri? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = MyProfileViewModelFactory(UserRepository())
         myProfileViewModel = ViewModelProvider(this, factory).get(MyProfileViewModel::class.java)
-        profileImageUri = savedInstanceState?.getParcelable("profileImageUri")
-        profileImageUri?.let {
-            imageView.setImageURI(it)
-        }
-        Log.d("xxx", "GetMyImg ImageP $profileImageUri")
+
     }
 
     override fun onCreateView(
@@ -69,17 +80,23 @@ class MyProfileFragment : Fragment() {
             val user = myProfileViewModel.user.value
             Log.i("xxx","GetMy user "+ user.toString())
             if (user != null) {
-                userNameTextView.text="${user.last_name} ${user.first_name}"
-                roleTypeTextView.text ="${user.type}"
-                emailAddrressEditText.setText("${user.email}")
-                if(user.image!= null){
-                    imageView.setImageDrawable(user.image as Drawable?)
+                userNameEditText.setText("${user.lastName} ${user.firstName}")
+                roleTypeTextView.text ="${user.departmentId}"
+                emailAddressTextView.text = user.email
+                if(user.imageUrl!= null){
+                    var decodeBitmap = decodeBase64ToImage(user.imageUrl!!)
+                    imageView.setImageBitmap(decodeBitmap)
                 }
-                if(user.phone_number!= null){
-                    phoneEditText.setText("${user.phone_number}")
+                if(user.phoneNumber!= null){
+                    phoneEditText.setText("${user.phoneNumber}")
+                    phoneNumber = user.phoneNumber
                 }
                 if(user.location!= null){
                     locationEditText.setText("${user.location}")
+                    location = user.location
+                }
+                if(user.type == UserType.MENTEE && user.mentorId<1L){
+                    selectMentorButton.visibility = View.VISIBLE
                 }
             }
             else{
@@ -89,27 +106,95 @@ class MyProfileFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             }
-
         }
 
         addPhotoImageView.setOnClickListener {
-            val intent = Intent(Intent.ACTION_OPEN_DOCUMENT, MediaStore.Images.Media.EXTERNAL_CONTENT_URI )
-            selectImageFromGallery()
+            val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI )
+            selectImageFromGalleryResult.launch(intent)
         }
 
+        editProfileButton.setOnClickListener {
+            var name = userNameEditText.text.toString().split(" ")
+
+            if (locationValidate(locationEditText.text.toString()))
+                location = locationEditText.text.toString()
+            else{
+                locationEditText.error = "Invalid location address!"
+            }
+
+            if (mobileValidate(phoneEditText.text.toString()))
+                phoneNumber = phoneEditText.text.toString()
+            else {
+                phoneEditText.error = "Invalid Phone number!"
+            }
+            val imageUrl = encodeImageToBase64(imageView)
+            if (name.isEmpty() || name.equals("Name")) {
+                Toast.makeText(
+                    this.requireContext(),
+                    "Please, enter your name",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                var lastName = name[0]
+                var firstName = name[1]
+
+                myProfileViewModel.updateMyProfile(UpdateUserRequest(lastName,firstName,location,phoneNumber, imageUrl))
+            }
+        }
+        myProfileViewModel.updateResult.observe(viewLifecycleOwner) {
+            if(it){
+                Toast.makeText(
+                    this.requireContext(),
+                    "Update profile is success!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+            else{
+                Toast.makeText(
+                    this.requireContext(),
+                    "Update profile is failed!",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
+        }
+    }
+
+
+    private fun encodeImageToBase64(imageView: ImageView): String{
+        val bitmap = (imageView.drawable as BitmapDrawable).bitmap
+        val byteArrayOutputStream = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG,100,byteArrayOutputStream)
+        val imageBytes = byteArrayOutputStream.toByteArray()
+        return Base64.encodeToString(imageBytes, Base64.DEFAULT)
+    }
+    private fun decodeBase64ToImage(image: String): Bitmap{
+        val decodeBytes = Base64.decode(image,Base64.DEFAULT)
+        return BitmapFactory.decodeByteArray(decodeBytes,0,decodeBytes.size)
     }
 
     private fun initViewItems() {
-        userNameTextView = this.requireView().findViewById(R.id.userNameTextView)
+        userNameEditText = this.requireView().findViewById(R.id.userNameEditText)
         roleTypeTextView = this.requireView().findViewById(R.id.roleTypeTextView)
-        emailAddrressEditText = this.requireView().findViewById(R.id.emailAddressEditText)
+        emailAddressTextView = this.requireView().findViewById(R.id.emailAddressTextView)
         phoneEditText = this.requireView().findViewById(R.id.phoneEditText)
         locationEditText = this.requireView().findViewById(R.id.locationEditText)
         imageView = this.requireView().findViewById(R.id.circleImageView)
         addPhotoImageView = this.requireView().findViewById(R.id.addPhotoImageView)
+        editProfileButton = this.requireView().findViewById(R.id.editProfileButton)
+        selectMentorButton = this.requireView().findViewById(R.id.selectMentorButton)
     }
 
-    private fun selectImageFromGallery() = selectImageFromGalleryResult.launch("image/*")
+    private fun mobileValidate(text: String?): Boolean {
+        val p = Pattern.compile("^\\+407[0-9]{8}$")
+        val m = p.matcher(text)
+        return m.matches()
+    }
+
+    private fun locationValidate(text: String?): Boolean{
+        val p = Pattern.compile("^[a-zA-Z\\s]+$")
+        val m = p.matcher(text)
+        return m.matches()
+    }
 
 
 

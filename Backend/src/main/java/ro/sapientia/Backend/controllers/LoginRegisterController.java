@@ -3,22 +3,25 @@ package ro.sapientia.Backend.controllers;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import ro.sapientia.Backend.controllers.dto.LoginRequest;
 import ro.sapientia.Backend.controllers.dto.LoginResponse;
 import ro.sapientia.Backend.controllers.dto.RegisterRequestDTO;
+import ro.sapientia.Backend.controllers.dto.UserDTO;
+import ro.sapientia.Backend.controllers.mapper.UserMapper;
+import ro.sapientia.Backend.domains.UserEntity;
+import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 import ro.sapientia.Backend.services.security.JwtTokenService;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
 import javax.validation.Valid;
+import javax.validation.constraints.Positive;
 
 @Slf4j
 @RestController
@@ -56,7 +59,7 @@ public class LoginRegisterController {
         String token = tokenService.generateToken(userDetails);
         loginResponse.setToken(token);
         userDetailsService.saveUserToken(authenticationRequest.getEmail(), token);
-        loginResponse.setUserId(userDetailsService.sendUserId(token));
+        //loginResponse.setUserId(userDetailsService.sendUserId(token));
         return loginResponse;
     }
 
@@ -68,5 +71,11 @@ public class LoginRegisterController {
         }
         userDetailsService.saveUser(registerRequest);
         return "Successful registration";
+    }
+    @GetMapping("/test")
+    public ResponseEntity<String> getTest(){
+        return new ResponseEntity<>(
+                "Success",
+                HttpStatus.OK);
     }
 }

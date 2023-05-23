@@ -1,7 +1,6 @@
 package com.example.a3trackerapplication.ui.mytasks
 
 import android.app.DatePickerDialog
-import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -16,19 +15,13 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.R
-import com.example.a3trackerapplication.models.LoginRequest
-import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.models.NewTaskRequest
 import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.ui.login.LoginViewModel
-import com.example.a3trackerapplication.ui.login.LoginViewModelFactory
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.collections.HashMap
-import kotlin.properties.Delegates
 
 class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
 
@@ -153,7 +146,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
             }
         }
 
-       val assignee = users?.map{ "${it.last_name} ${it.first_name}"}
+       val assignee = users?.map{ "${it.lastName} ${it.firstName}"}
         // access the spinner
         val assigneeSpinner = view.findViewById<Spinner>(R.id.assigneeSpinner)
         if (assigneeSpinner != null && assignee != null) {
@@ -168,7 +161,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
 //                        getString(R.string.selected_item) + " " +
 //                                "" + languages[position], Toast.LENGTH_SHORT).show()
                     if(users != null){
-                        assignedToUserId = users!!.get(position).ID
+                        assignedToUserId = users!!.get(position).id
                     }
                 }
 

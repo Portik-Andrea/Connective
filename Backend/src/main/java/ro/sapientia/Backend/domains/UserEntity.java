@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.ToString;
 
 import javax.validation.constraints.NotEmpty;
+import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -27,8 +28,9 @@ public class UserEntity {
     @NotEmpty(message = "email is mandatory")
     private String email;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "type")
-    private Integer type;
+    private UserType type;
 
     @OneToOne()
     @JoinColumn(name = "department_id")
@@ -40,8 +42,8 @@ public class UserEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "image_url")
-    private String imageUrl;
+    @Column(name = "image_url",columnDefinition = "bytea")
+    private byte[] imageUrl;
 
     //egy mentor tobb mentoralt vagy egy mentor egy mentoralt ??
     @OneToOne
@@ -70,7 +72,7 @@ public class UserEntity {
     public UserEntity() {
     }
 
-    public UserEntity(String firstName, String lastName, String email, Integer type, Department department) {
+    public UserEntity(String firstName, String lastName, String email, UserType type, Department department) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -78,7 +80,7 @@ public class UserEntity {
         this.department = department;
     }
 
-    public UserEntity(String firstName, String lastName, String email, Integer type, Department department, String password) {
+    public UserEntity(String firstName, String lastName, String email, UserType type, Department department, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -119,11 +121,11 @@ public class UserEntity {
         this.email = email;
     }
 
-    public Integer getType() {
+    public UserType getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(UserType type) {
         this.type = type;
     }
 
@@ -151,11 +153,11 @@ public class UserEntity {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getImageUrl() {
+    public byte[] getImageUrl() {
         return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl) {
+    public void setImageUrl(byte[] imageUrl) {
         this.imageUrl = imageUrl;
     }
 
@@ -224,7 +226,7 @@ public class UserEntity {
     }
 
     public void updateMentor(UserEntity mentor){
-        if(this.type == 2 && mentor.getType() == 1){
+        if(this.type == UserType.MENTEE && mentor.getType() == UserType.MENTOR){
             this.mentor = mentor;
         }
     }
@@ -250,7 +252,7 @@ public class UserEntity {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", imageUrl='" + imageUrl + '\''
                 );
-        if(this.type==2 && mentor != null){
+        if(this.type==UserType.MENTEE && mentor != null){
             String appendMentor =new String( ", mentor='"+ mentor.getFirstName() + " " + mentor.getLastName()+ '\'' +"}");
             userToString.append(appendMentor);
         }

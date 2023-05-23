@@ -51,11 +51,11 @@ class LoginViewModel(val repository: UserRepository) : ViewModel() {
                     Log.i("xxx", "Login body" + response.body().toString())
                 } else {
                     loginResult.value = LoginResult.INVALID_CREDENTIALS
-                    Log.i("xxx", "Login invalid credentials " + (response.toString()))
+                    Log.i("xxx", "Login invalid credentials $response")
                 }
             } catch (e: Exception) {
                 loginResult.value = LoginResult.UNKNOWN_ERROR
-                Log.i("xxx","Login error" + e.toString())
+                Log.i("xxx", "Login error $e")
             }
         }
     }

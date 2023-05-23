@@ -17,12 +17,9 @@ import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.TaskSelected
 import com.example.a3trackerapplication.models.EditTaskRequest
-import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.ui.login.LoginViewModel
-import com.example.a3trackerapplication.ui.login.LoginViewModelFactory
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
 import java.text.SimpleDateFormat
@@ -158,8 +155,8 @@ class TaskDescriptionFragment : Fragment() {
     private fun searchUserName(id: Long):String{
         var name = ""
         users?.forEach {
-            if(it.ID== id){
-                name="${it.last_name} ${it.first_name}"
+            if(it.id== id){
+                name="${it.lastName} ${it.firstName}"
             }
         }
         return name

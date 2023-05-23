@@ -21,6 +21,10 @@ class UserRepository {
         return TrackerApi.getApi()?.getMyUser(token = token);
     }
 
+    suspend fun updateUser(token: String,updateUser: UpdateUserRequest): Response<Boolean>? {
+        return TrackerApi.getApi()?.updateUser(token = token,request = updateUser);
+    }
+
     suspend fun getTasks(token: String): Response<List<Task>>? {
         return TrackerApi.getApi()?.getTasks(token = token);
     }

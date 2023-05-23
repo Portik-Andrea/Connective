@@ -18,8 +18,11 @@ interface TrackerApi {
     @GET(Constants.GET_USERS_URL)
     suspend fun getUsers(@Header("token") token: String): Response<List<User>>
 
-    @GET(Constants.GET_MY_USER_URL)
+    @GET("users/myuser")
     suspend fun getMyUser(@Header("token") token: String): Response<User>
+
+    @POST("users/updateuser")
+    suspend fun updateUser(@Header("token") token: String,@Body request: UpdateUserRequest): Response<Boolean>
 
     @GET("/task/getTasks")
     suspend fun getTasks(@Header("token") token: String): Response<List<Task>>

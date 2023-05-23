@@ -7,6 +7,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
+import com.example.a3trackerapplication.models.LoginRequest
+import com.example.a3trackerapplication.models.LoginResult
+import com.example.a3trackerapplication.models.UpdateUserRequest
 import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.UserRepository
 import kotlinx.coroutines.launch
@@ -23,6 +26,7 @@ class MyProfileViewModelFactory(
 class MyProfileViewModel(val repository: UserRepository): ViewModel() {
     var user = MutableLiveData<User>()
     var imageUri : Uri? = null
+    var updateResult: MutableLiveData<Boolean> = MutableLiveData()
 
     fun myUser() {
         viewModelScope.launch {
@@ -41,4 +45,22 @@ class MyProfileViewModel(val repository: UserRepository): ViewModel() {
             }
         }
     }
+    fun updateMyProfile(request: UpdateUserRequest){
+        viewModelScope.launch {
+            try {
+                val response = repository.updateUser(MyApplication.token,request)
+                Log.d("xxx", "UpdateMy user response $response")
+                if (response?.isSuccessful == true) {
+                    Log.d("xxx", "UpdateMy user response ${response.body()}")
+                    updateResult.value = response.body()
+                } else {
+                    Log.d("xxx", "UpdateMy user error response ${response?.errorBody()}")
+                }
+
+            } catch (ex: Exception) {
+                Log.e("xxx", ex.message, ex)
+            }
+        }
+    }
+
 }

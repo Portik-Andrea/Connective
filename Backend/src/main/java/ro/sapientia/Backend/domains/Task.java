@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Table(name = "tasks")
@@ -26,20 +27,21 @@ public class Task {
     @JoinColumn(name = "assigned_to_user_id")
     private UserEntity assignedToUser;
 
-    @OneToOne(cascade = CascadeType.ALL, optional = false)
+    //@OneToOne(cascade = CascadeType.ALL, optional = false)
+    @OneToOne
     @NotEmpty(message = "Creator is mandatory")
     private UserEntity creatorUser;
 
     @Column(name = "created_time")
     @NotEmpty(message = "The created time is mandatory")
-    private LocalDate createdTime;
+    private Date createdTime;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private Priority priority;
 
     @Column(name = "deadline")
-    private LocalDate deadline;
+    private Date deadline;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
@@ -52,7 +54,9 @@ public class Task {
     public Task() {
     }
 
-    public Task(String title, String description, UserEntity creatorUser, LocalDate createdTime, Priority priority, LocalDate deadline, Status status, Integer progress) {
+    public Task(String title, String description, UserEntity creatorUser,
+                Date createdTime, Priority priority, Date deadline,
+                Status status, Integer progress) {
         this.title = title;
         this.description = description;
         this.creatorUser = creatorUser;
@@ -108,11 +112,11 @@ public class Task {
         this.creatorUser = creatorUser;
     }
 
-    public LocalDate getCreatedTime() {
+    public Date getCreatedTime() {
         return createdTime;
     }
 
-    public void setCreatedTime(LocalDate createdTime) {
+    public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
     }
 
@@ -124,11 +128,11 @@ public class Task {
         this.priority = priority;
     }
 
-    public LocalDate getDeadline() {
+    public Date getDeadline() {
         return deadline;
     }
 
-    public void setDeadline(LocalDate deadline) {
+    public void setDeadline(Date deadline) {
         this.deadline = deadline;
     }
 

@@ -3,6 +3,7 @@ package ro.sapientia.Backend.services.impl;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 import ro.sapientia.Backend.controllers.dto.UpdateUserDTO;
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.controllers.mapper.UserMapper;
@@ -17,6 +18,11 @@ import ro.sapientia.Backend.services.exceptions.IllegalEmailException;
 import ro.sapientia.Backend.services.exceptions.IllegalUserTypeException;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
+import java.util.Base64;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -76,4 +82,29 @@ public class UserServiceImpl implements UserService {
         }
         return false;
     }
+
+    @Override
+    public List<UserEntity> allMentors(){
+        List<UserEntity> mentors = userRepository.findAllByType(UserType.MENTOR);
+        return mentors;
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public UserEntity addMentor(Long userId, Long mentorId){
+        UserEntity user = findUserByID(userId);
+        //byte[] decodeId = Base64.getMimeDecoder().decode(mentorId);
+        /*var decodeId = Base64Utils.decodeFromString(mentorId);
+        ByteBuffer buffer = ByteBuffer.wrap(decodeId);
+        buffer.order(ByteOrder.BIG_ENDIAN);
+        //Long decodeLongId = 1L;
+        Long decodeLongId = buffer.getLong();*/
+        UserEntity mentor = findUserByID(mentorId);
+        if(user.getMentor()== null) {
+            user.setMentor(mentor);
+            userRepository.save(user);
+        }
+        return mentor;
+    }
+
 }

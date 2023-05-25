@@ -51,7 +51,14 @@
     <fragment
         android:id="@+id/myProfileFragment"
         android:name="com.example.a3trackerapplication.ui.settings.MyProfileFragment"
-        android:label="MyProfileFragment" />
+        android:label="MyProfileFragment" >
+        <action
+            android:id="@+id/action_myProfileFragment_to_selectMentorFragment"
+            app:destination="@id/selectMentorFragment" />
+        <action
+            android:id="@+id/action_myProfileFragment_to_settingsFragment"
+            app:destination="@id/settingsFragment" />
+    </fragment>
     <fragment
         android:id="@+id/taskDescriptionFragment"
         android:name="com.example.a3trackerapplication.ui.mytasks.TaskDescriptionFragment"
@@ -81,5 +88,14 @@
         <action
             android:id="@+id/action_editTaskFragment_to_taskDescriptionFragment"
             app:destination="@id/taskDescriptionFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/selectMentorFragment"
+        android:name="com.example.a3trackerapplication.ui.settings.SelectMentorFragment"
+        android:label="fragment_select_mentor"
+        tools:layout="@layout/fragment_select_mentor" >
+        <action
+            android:id="@+id/action_selectMentorFragment_to_myProfileFragment"
+            app:destination="@id/myProfileFragment" />
     </fragment>
 </navigation>

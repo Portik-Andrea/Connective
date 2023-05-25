@@ -36,4 +36,12 @@ class UserRepository {
     suspend fun updateTask(token: String, request: EditTaskRequest): Response<String>?{
         return TrackerApi.getApi()?.updateTask(token = token,request=request);
     }
+
+    suspend fun getAllMentors(token: String): Response<List<User>>?{
+        return TrackerApi.getApi()?.getAllMentor(token = token);
+    }
+
+    suspend fun selectMentor(token: String, mentorId: Long): Response<User>?{
+        return TrackerApi.getApi()?.getSelectMentor(token = token, mentorId = mentorId);
+    }
 }

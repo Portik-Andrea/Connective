@@ -5,11 +5,8 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
-import android.net.Uri
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Base64
 import android.util.Log
 import android.view.LayoutInflater
@@ -17,16 +14,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.view.drawToBitmap
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.R
-import com.example.a3trackerapplication.databinding.ActivityMainBinding
-import com.example.a3trackerapplication.databinding.FragmentMyProfileBinding
 import com.example.a3trackerapplication.models.UpdateUserRequest
 import com.example.a3trackerapplication.models.UserType
 import com.example.a3trackerapplication.repositories.UserRepository
@@ -36,8 +33,10 @@ import java.util.regex.Pattern
 
 class MyProfileFragment : Fragment() {
     private lateinit var myProfileViewModel: MyProfileViewModel
+    private lateinit var callBackMyProfileButton: ImageButton
     private lateinit var userNameEditText: EditText
     private lateinit var roleTypeTextView: TextView
+    private lateinit var myMentorTextView: TextView
     private lateinit var emailAddressTextView: TextView
     private lateinit var phoneEditText: EditText
     private lateinit var locationEditText: EditText
@@ -58,13 +57,21 @@ class MyProfileFragment : Fragment() {
         }
     }
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = MyProfileViewModelFactory(UserRepository())
         myProfileViewModel = ViewModelProvider(this, factory).get(MyProfileViewModel::class.java)
 
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(!shouldInterceptBackPress()){
+                    isEnabled = false
+                    activity?.onBackPressed()
+                }
+            }
+        })
     }
+    fun shouldInterceptBackPress()=true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -81,7 +88,7 @@ class MyProfileFragment : Fragment() {
             Log.i("xxx","GetMy user "+ user.toString())
             if (user != null) {
                 userNameEditText.setText("${user.lastName} ${user.firstName}")
-                roleTypeTextView.text ="${user.departmentId}"
+                roleTypeTextView.text ="${user.departmentName}"
                 emailAddressTextView.text = user.email
                 if(user.imageUrl!= null){
                     var decodeBitmap = decodeBase64ToImage(user.imageUrl!!)
@@ -97,6 +104,13 @@ class MyProfileFragment : Fragment() {
                 }
                 if(user.type == UserType.MENTEE && user.mentorId<1L){
                     selectMentorButton.visibility = View.VISIBLE
+                }
+                if(user.mentorId>=1L){
+                    myProfileViewModel.selectMentor(user.mentorId)
+                    myProfileViewModel.mentor.observe(viewLifecycleOwner){
+                        val mentor = myProfileViewModel.mentor.value!!
+                        myMentorTextView.text = "Mentor: ${mentor.lastName} ${mentor.firstName}"
+                    }
                 }
             }
             else{
@@ -157,6 +171,12 @@ class MyProfileFragment : Fragment() {
                 ).show()
             }
         }
+        selectMentorButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myProfileFragment_to_selectMentorFragment)
+        }
+        callBackMyProfileButton.setOnClickListener {
+            findNavController().navigate(R.id.action_myProfileFragment_to_settingsFragment)
+        }
     }
 
 
@@ -173,8 +193,10 @@ class MyProfileFragment : Fragment() {
     }
 
     private fun initViewItems() {
+        callBackMyProfileButton = this.requireView().findViewById(R.id.callBackMyProfileButton)
         userNameEditText = this.requireView().findViewById(R.id.userNameEditText)
         roleTypeTextView = this.requireView().findViewById(R.id.roleTypeTextView)
+        myMentorTextView = this.requireView().findViewById(R.id.myMentorTextView)
         emailAddressTextView = this.requireView().findViewById(R.id.emailAddressTextView)
         phoneEditText = this.requireView().findViewById(R.id.phoneEditText)
         locationEditText = this.requireView().findViewById(R.id.locationEditText)
@@ -195,8 +217,6 @@ class MyProfileFragment : Fragment() {
         val m = p.matcher(text)
         return m.matches()
     }
-
-
 
 }
 

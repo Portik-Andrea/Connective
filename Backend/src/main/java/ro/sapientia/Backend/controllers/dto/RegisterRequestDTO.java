@@ -15,12 +15,22 @@ public class RegisterRequestDTO {
     private String lastName;
     @Positive
     private String type;
+    @NotNull
+    private Long departmentId;
     @NotEmpty(message = "email is mandatory")
     @Size(max = 255)
     private String email;
     @Size(max = 255)
     @NotEmpty(message = "password is mandatory")
     private String password;
+
+    public Long getDepartmentId() {
+        return departmentId;
+    }
+
+    public void setDepartmentId(Long departmentId) {
+        this.departmentId = departmentId;
+    }
 
     public String getFirstName() {
         return firstName;

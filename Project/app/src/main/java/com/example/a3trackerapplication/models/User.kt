@@ -11,6 +11,7 @@ data class User(
     var email: String,
     var type: UserType,
     var departmentId: Long,
+    var departmentName: String,
     var location: String?,
     var phoneNumber: String?,
     var imageUrl: String?,

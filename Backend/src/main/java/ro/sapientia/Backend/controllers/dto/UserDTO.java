@@ -27,6 +27,7 @@ public class UserDTO implements Serializable {
 
     private String type;
     private Long departmentId;
+    private String departmentName;
     @Size(max = 250)
     private String location;
 

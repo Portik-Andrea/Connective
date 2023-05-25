@@ -1,33 +1,36 @@
 package ro.sapientia.Backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ro.sapientia.Backend.controllers.dto.UpdateUserDTO;
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.controllers.mapper.UserMapper;
 import ro.sapientia.Backend.domains.UserEntity;
-import ro.sapientia.Backend.services.DepartmentService;
 import ro.sapientia.Backend.services.UserService;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
 import javax.validation.constraints.Positive;
+import java.util.ArrayList;
+import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
     private final UserService userService;
-    private final DepartmentService departmentService;
-    private SecurityUserDetailsService userDetailsService;
+    private final SecurityUserDetailsService userDetailsService;
 
     @Autowired
-    public UserController(UserService userService, DepartmentService departmentService,
+    public UserController(UserService userService,
                           SecurityUserDetailsService userDetailService){
         this.userService = userService;
-        this.departmentService = departmentService;
         this.userDetailsService = userDetailService;
     }
 
@@ -37,7 +40,7 @@ public class UserController {
         if(user == null){
             throw new UserNotFoundException(id);
         }
-        return UserMapper.convertModelToDTO(user);
+        return UserMapper.convertModelToDTO(user,user.getDepartment());
     }
     @GetMapping("/myuser")
     public UserDTO getUser(HttpServletRequest request){
@@ -49,7 +52,7 @@ public class UserController {
             if (user == null) {
                 throw new UserNotFoundException(id);
             }
-            return UserMapper.convertModelToDTO(user);
+            return UserMapper.convertModelToDTO(user,user.getDepartment());
         }
         else {
             throw new IllegalArgumentException("Invalid token");
@@ -77,6 +80,33 @@ public class UserController {
         }
     }
 
+    @GetMapping("/mentors")
+    public List<UserDTO> allMentors(){
+        List<UserEntity> mentors = userService.allMentors();
+        List<UserDTO> mentorsDTO = new ArrayList<>();
+        mentors.forEach(mentor -> mentorsDTO.add(UserMapper.convertModelToDTO(mentor,mentor.getDepartment()))
+        );
+        return mentorsDTO;
+    }
+
+    @GetMapping("/selectmentor/{mentorId}")
+    public UserDTO selectMentor(@PathVariable("mentorId") Long mentorId, HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            Long id = userDetailsService.sendUserId(token);
+            //mentorId.replace("25","");
+            UserEntity mentor = userService.addMentor(id,mentorId);
+            if(mentor == null){
+                throw new UserNotFoundException(mentorId);
+            }
+            return UserMapper.convertModelToDTO(mentor,mentor.getDepartment());
+        }
+        else {
+            throw new IllegalArgumentException("Invalid token");
+        }
+    }
+
     @PostMapping("/adduser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO){
         UserEntity result = userService.addUser(userDTO);
@@ -84,14 +114,4 @@ public class UserController {
                 "Success",
                 HttpStatus.OK);
     }
-
-//    @GetMapping("/user")
-//    public UserDTO getUser(){
-//
-//        UserEntity user = userService.findUserByID(id);
-//        if(user == null){
-//            throw new UserNotFoundException(id);
-//        }
-//        return UserMapper.convertModelToDTO(user);
-//    }
 }

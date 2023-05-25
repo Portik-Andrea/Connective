@@ -25,6 +25,7 @@ class MyProfileViewModelFactory(
 
 class MyProfileViewModel(val repository: UserRepository): ViewModel() {
     var user = MutableLiveData<User>()
+    var mentor = MutableLiveData<User>()
     var imageUri : Uri? = null
     var updateResult: MutableLiveData<Boolean> = MutableLiveData()
 
@@ -53,6 +54,24 @@ class MyProfileViewModel(val repository: UserRepository): ViewModel() {
                 if (response?.isSuccessful == true) {
                     Log.d("xxx", "UpdateMy user response ${response.body()}")
                     updateResult.value = response.body()
+                } else {
+                    Log.d("xxx", "UpdateMy user error response ${response?.errorBody()}")
+                }
+
+            } catch (ex: Exception) {
+                Log.e("xxx", ex.message, ex)
+            }
+        }
+    }
+
+    fun selectMentor(mentorId:Long){
+        viewModelScope.launch {
+            try{
+                val response = repository.selectMentor(MyApplication.token,mentorId)
+                Log.d("xxx", "UpdateMy user response $response")
+                if (response?.isSuccessful == true) {
+                    Log.d("xxx", "UpdateMy user response ${response.body()}")
+                    mentor.value = response.body()
                 } else {
                     Log.d("xxx", "UpdateMy user error response ${response?.errorBody()}")
                 }

@@ -2,9 +2,9 @@ package ro.sapientia.Backend.services.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ro.sapientia.Backend.services.TaskService;
+import ro.sapientia.Backend.services.IGroupInformationService;
 
 @Service
 @Transactional(readOnly = true)
-public class TaskServiceImpl implements TaskService {
+public class GroupInformationService implements IGroupInformationService {
 }

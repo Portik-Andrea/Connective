@@ -4,7 +4,6 @@ import android.app.DatePickerDialog
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +11,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.MyApplication
@@ -19,7 +19,10 @@ import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.TaskSelected
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.Task
+import com.example.a3trackerapplication.models.TaskPriorities
+import com.example.a3trackerapplication.models.TaskStatus
 import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
@@ -46,17 +49,17 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private var deadline : Long = 0
     private val calendar = Calendar.getInstance()
 
-    private var editTaskRequest = EditTaskRequest(0L,"","",0L,-1,0L,-1,-1)
+    private var editTaskRequest = EditTaskRequest(0L,"","",0L,TaskPriorities.LOW,0L,TaskStatus.BLOCKED)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = MyTasksViewModelFactory(UserRepository())
+        val factory = MyTasksViewModelFactory(TaskRepository())
         myTasksViewModel = ViewModelProvider(this, factory)[MyTasksViewModel::class.java]
 
         val userListFactory = UserListViewModelFactory(UserRepository())
         userListViewModel = ViewModelProvider(this, userListFactory)[UserListViewModel::class.java]
 
-        val editTaskFactory = EditTaskViewModelFactory(UserRepository())
+        val editTaskFactory = EditTaskViewModelFactory(TaskRepository())
         editTaskViewModel = ViewModelProvider(this, editTaskFactory)[EditTaskViewModel::class.java]
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
@@ -141,13 +144,13 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     private fun setEditTaskRequest() {
-        editTaskRequest.taskId=currentItem.ID
+        editTaskRequest.taskId=currentItem.taskId
         editTaskRequest.title = currentItem.title
         editTaskRequest.description = currentItem.description
-        editTaskRequest.assignedToUserId = currentItem.asigned_to_user_ID
+        editTaskRequest.assignedToUserId = currentItem.assignedToUserId
         editTaskRequest.priority = currentItem.priority
         editTaskRequest.deadline = currentItem.deadline
-        editTaskRequest.departmentId = currentItem.department_ID
+        //editTaskRequest.departmentId = currentItem.department_ID
         editTaskRequest.status = currentItem.status
     }
 
@@ -176,7 +179,7 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun setSpinners(view: View, currentTask: Task,) {
+    private fun setSpinners(view: View, currentTask: Task) {
         Log.d("xxx", "GetMy setSpiners $currentTask")
         val projectType = resources.getStringArray(R.array.ProjectType)
 
@@ -185,13 +188,13 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (spinner != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, projectType)
             spinner.adapter = adapter
-            spinner.setSelection(currentTask.department_ID-1)
+            //spinner.setSelection(currentTask.department_ID-1)
 
             spinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-                    editTaskRequest.departmentId = position+1
+                    //editTaskRequest.departmentId = position+1
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -206,13 +209,13 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (assigneeSpinner != null && assignee != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, assignee)
             assigneeSpinner.adapter = adapter
-            val assignedId = currentTask.asigned_to_user_ID.toInt()
+            val assignedId = currentTask.assignedToUserId.toInt()
             if(assignedId>4){
-                assigneeSpinner.setSelection(currentTask.asigned_to_user_ID.toInt()-3)
+                assigneeSpinner.setSelection(currentTask.assignedToUserId.toInt()-3)
             }else{
-                assigneeSpinner.setSelection(currentTask.asigned_to_user_ID.toInt()-1)
+                assigneeSpinner.setSelection(currentTask.assignedToUserId.toInt()-1)
             }
-            Log.d("xxx", "GetMy setSpiners user id ${currentTask.asigned_to_user_ID.toInt()}")
+            Log.d("xxx", "GetMy setSpiners user id ${currentTask.assignedToUserId.toInt()}")
             Log.d("xxx", "GetMy setSpiners user name ${spinner.selectedItemPosition}")
 
             assigneeSpinner.onItemSelectedListener = object :
@@ -244,13 +247,13 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (prioritySpinner != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, priorities)
             prioritySpinner.adapter = adapter
-            prioritySpinner.setSelection(currentTask.priority-1)
+            prioritySpinner.setSelection(currentItem.priority.ordinal)
 
             prioritySpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-                    editTaskRequest.priority = position+1
+                    editTaskRequest.priority =TaskPriorities.values()[position]// position+1
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -269,6 +272,17 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             ).show()
         }
 
+    }
+    private fun stringConvert(text : String): String{
+        val newStr: StringBuffer = StringBuffer(text)
+        for (i in text.indices) {
+            if (Character.isLowerCase(text[i])) {
+                newStr.setCharAt(i, Character.toUpperCase(text[i]))
+            } else if (Character.isUpperCase(text[i])) {
+                newStr.setCharAt(i, Character.toLowerCase(text[i]))
+            }
+        }
+        return newStr.toString()
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {

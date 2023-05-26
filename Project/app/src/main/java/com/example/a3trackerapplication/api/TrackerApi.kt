@@ -31,8 +31,8 @@ interface TrackerApi {
     @GET("users/selectmentor/{mentorId}")
     suspend fun getSelectMentor(@Header("token") token: String,@Path("mentorId") mentorId : Long): Response<User>
 
-    @GET("/task/getTasks")
-    suspend fun getTasks(@Header("token") token: String): Response<List<Task>>
+    @GET("tasks/allTasks")
+    suspend fun getAllTasks(@Header("token") token: String): Response<List<Task>>
 
     @POST("/task/create")
     suspend fun createTask(@Header("token") token: String, @Body request: NewTaskRequest): Response<String>

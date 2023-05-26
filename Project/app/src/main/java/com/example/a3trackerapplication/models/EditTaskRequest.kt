@@ -8,8 +8,8 @@ data class EditTaskRequest (
     var title: String,
     var description: String,
     var assignedToUserId: Long,
-    var priority: Int,
+    var priority: TaskPriorities,
     var deadline: Long,
-    var departmentId: Int,
-    var status: Int
+    //var departmentId: Int,
+    var status: TaskStatus
 )

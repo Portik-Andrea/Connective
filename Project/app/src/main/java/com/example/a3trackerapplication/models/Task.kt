@@ -4,15 +4,17 @@ import com.squareup.moshi.JsonClass
 
 @JsonClass(generateAdapter = true)
 data class Task(
-    var ID: Long,
+    var taskId: Long,
     var title: String,
     var description: String,
-    var created_time: Long,
-    var created_by_user_ID: Long,
-    var asigned_to_user_ID: Long,
-    var priority: Int,
+    var assignedToUserId: Long,
+    var assignedToUserName: String,
+    var createdByUserId: Long,
+    var createdByUserName: String,
+    var createdTime: Long,
+    var priority: TaskPriorities,
     var deadline: Long,
-    var department_ID: Int,
-    var status: Int,
-    var progress: Any?
+    //var projectId: Long,
+    var status: TaskStatus,
+    var progress: Int
 )

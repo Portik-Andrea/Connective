@@ -1,32 +1,30 @@
 package com.example.a3trackerapplication.ui.mytasks
 
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.models.Task
-import com.example.a3trackerapplication.repositories.UserRepository
+import com.example.a3trackerapplication.repositories.TaskRepository
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.supervisorScope
 
 class MyTasksViewModelFactory(
-private val repository: UserRepository
+private val repository: TaskRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return MyTasksViewModel( repository) as T
     }
 }
 
-class MyTasksViewModel(val repository: UserRepository): ViewModel() {
+class MyTasksViewModel(private val repository: TaskRepository): ViewModel() {
     var myTasks = MutableLiveData<List<Task>>()
 
     fun getTasks() {
         viewModelScope.launch {
             try {
-                val response = repository.getTasks(MyApplication.token)
+                val response = repository.getAllTasks(MyApplication.token)
                 if(response?.isSuccessful == true) {
                     myTasks.value = response.body()
                     Log.d("xxx", "GetMy tasks response ${response.body()}")

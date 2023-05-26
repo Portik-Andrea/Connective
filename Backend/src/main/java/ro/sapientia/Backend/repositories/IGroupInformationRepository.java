@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import ro.sapientia.Backend.domains.GroupInformation;
 
 @Repository
-public interface GroupInformationRepository extends JpaRepository<GroupInformation, Long> {
+public interface IGroupInformationRepository extends JpaRepository<GroupInformation, Long> {
 }

@@ -8,11 +8,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.sapientia.Backend.domains.*;
-import ro.sapientia.Backend.repositories.DepartmentRepository;
-import ro.sapientia.Backend.repositories.TaskRepository;
-import ro.sapientia.Backend.repositories.UserRepository;
+import ro.sapientia.Backend.repositories.IDepartmentRepository;
+import ro.sapientia.Backend.repositories.ITaskRepository;
+import ro.sapientia.Backend.repositories.IUserRepository;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.Optional;
 
@@ -24,7 +23,7 @@ public class BackendApplication {
 		SpringApplication.run(BackendApplication.class, args);
 	}
 	@Bean
-	public CommandLineRunner demo_repository1(DepartmentRepository repository) {
+	public CommandLineRunner demo_repository1(IDepartmentRepository repository) {
 		return (args) -> {
 			if(repository.count() == 0){
 				repository.save(new Department("HR"));
@@ -36,7 +35,7 @@ public class BackendApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo_repository2(UserRepository repository, DepartmentRepository departmentRepository) {
+	public CommandLineRunner demo_repository2(IUserRepository repository, IDepartmentRepository departmentRepository) {
 		return (args) -> {
 			if( repository.count() == 0 ) {
 				Optional<Department> department = departmentRepository.findByDepartmentName("Developer");
@@ -74,22 +73,22 @@ public class BackendApplication {
 	}
 
 	@Bean
-	public CommandLineRunner demo_task_repository(TaskRepository taskRepository,UserRepository userRepository) {
+	public CommandLineRunner demo_task_repository(ITaskRepository taskRepository, IUserRepository userRepository) {
 		return (args) -> {
 			if (taskRepository.count() == 0) {
 				Optional<UserEntity> mentor = userRepository.findById(1L);
 				Optional<UserEntity> user1 = userRepository.findById(2L);
 				if(mentor.isPresent() && user1.isPresent()){
 					Task task1 = new Task("Set-up company profile","Aaaaa bbbbbb cccc",
-							mentor.get(),new Date(2023,5,25,19,30),
-							Priority.LOW,new Date(2023,5,30),Status.NEW,0);
+							mentor.get(),new Date(123,0,25,19,30),
+							Priority.LOW,new Date(1674667800001L),Status.NEW,0);
 					task1.setAssignedToUser(user1.get());
 					taskRepository.save(task1);
 					//userRepository.save(user1.get());
 
 					Task task2 = new Task("Create home page","This is a description",
-							mentor.get(),new Date(2023,4,29,9,10),
-							Priority.MEDIUM,new Date(2023,5,20),Status.DONE,100);
+							mentor.get(),new Date(123,3,29,9,10),
+							Priority.MEDIUM,new Date(123,4,20),Status.DONE,100);
 					task2.setAssignedToUser(user1.get());
 					taskRepository.save(task2);
 					userRepository.save(user1.get());

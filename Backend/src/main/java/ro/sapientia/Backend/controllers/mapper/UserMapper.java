@@ -9,7 +9,7 @@ import ro.sapientia.Backend.domains.UserType;
 import java.util.Base64;
 
 public class UserMapper {
-    public static UserDTO convertModelToDTO(UserEntity user,Department department){
+    public static UserDTO convertModelToDTO(UserEntity user){
         UserDTO userDTO = new UserDTO();
         userDTO.setId(user.getId());
         userDTO.setFirstName(user.getFirstName());
@@ -18,7 +18,7 @@ public class UserMapper {
         userDTO.setType(user.getType().toString());
         if(user.getDepartment()!=null){
             userDTO.setDepartmentId(user.getDepartment().getDepartmentId());
-            userDTO.setDepartmentName(department.getDepartmentName());
+            userDTO.setDepartmentName(user.getDepartment().getDepartmentName());
         }
         userDTO.setLocation(user.getLocation());
         userDTO.setPhoneNumber(user.getPhoneNumber());

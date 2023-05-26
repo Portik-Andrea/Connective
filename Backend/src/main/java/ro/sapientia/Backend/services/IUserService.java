@@ -6,7 +6,7 @@ import ro.sapientia.Backend.domains.UserEntity;
 
 import java.util.List;
 
-public interface UserService {
+public interface IUserService {
     UserEntity findUserByID(Long id);
 
     UserEntity addUser(UserDTO userDTO);

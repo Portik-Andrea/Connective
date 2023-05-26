@@ -1,6 +1,5 @@
 package com.example.a3trackerapplication.repositories
 
-import com.example.a3trackerapplication.api.RetrofitInstance
 import com.example.a3trackerapplication.api.TrackerApi
 import com.example.a3trackerapplication.models.*
 import retrofit2.Response
@@ -23,18 +22,6 @@ class UserRepository {
 
     suspend fun updateUser(token: String,updateUser: UpdateUserRequest): Response<Boolean>? {
         return TrackerApi.getApi()?.updateUser(token = token,request = updateUser);
-    }
-
-    suspend fun getTasks(token: String): Response<List<Task>>? {
-        return TrackerApi.getApi()?.getTasks(token = token);
-    }
-
-    suspend fun createTask(token: String,request: NewTaskRequest): Response<String>? {
-        return TrackerApi.getApi()?.createTask(token = token,request=request);
-    }
-
-    suspend fun updateTask(token: String, request: EditTaskRequest): Response<String>?{
-        return TrackerApi.getApi()?.updateTask(token = token,request=request);
     }
 
     suspend fun getAllMentors(token: String): Response<List<User>>?{

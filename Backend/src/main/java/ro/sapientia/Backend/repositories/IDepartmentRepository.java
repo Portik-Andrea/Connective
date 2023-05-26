@@ -7,6 +7,6 @@ import ro.sapientia.Backend.domains.Department;
 import java.util.Optional;
 
 @Repository
-public interface DepartmentRepository extends JpaRepository<Department, Long> {
+public interface IDepartmentRepository extends JpaRepository<Department, Long> {
     Optional<Department> findByDepartmentName(String name);
 }

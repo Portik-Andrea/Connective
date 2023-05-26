@@ -3,38 +3,33 @@ package ro.sapientia.Backend.services.impl;
 import org.hibernate.service.spi.ServiceException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.Base64Utils;
 import ro.sapientia.Backend.controllers.dto.UpdateUserDTO;
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.controllers.mapper.UserMapper;
 import ro.sapientia.Backend.domains.Department;
 import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.domains.UserType;
-import ro.sapientia.Backend.repositories.DepartmentRepository;
-import ro.sapientia.Backend.repositories.UserRepository;
-import ro.sapientia.Backend.services.UserService;
+import ro.sapientia.Backend.repositories.IDepartmentRepository;
+import ro.sapientia.Backend.repositories.IUserRepository;
+import ro.sapientia.Backend.services.IUserService;
 import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
 import ro.sapientia.Backend.services.exceptions.IllegalEmailException;
 import ro.sapientia.Backend.services.exceptions.IllegalUserTypeException;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.nio.ByteOrder;
-import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class UserServiceImpl implements UserService {
-    private UserRepository userRepository;
+public class UserService implements IUserService {
+    private IUserRepository userRepository;
 
-    private DepartmentRepository departmentRepository;
+    private IDepartmentRepository departmentRepository;
 
-    public UserServiceImpl(UserRepository userRepository){
-        this.userRepository= userRepository;
+    public UserService(IUserRepository userRepository){
+        this.userRepository = userRepository;
     }
     @Override
     public UserEntity findUserByID(Long id) throws ServiceException {

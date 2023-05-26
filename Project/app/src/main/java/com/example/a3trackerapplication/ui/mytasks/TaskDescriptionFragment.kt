@@ -18,7 +18,10 @@ import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.TaskSelected
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.Task
+import com.example.a3trackerapplication.models.TaskPriorities
+import com.example.a3trackerapplication.models.TaskStatus
 import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
@@ -49,13 +52,13 @@ class TaskDescriptionFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = MyTasksViewModelFactory(UserRepository())
+        val factory = MyTasksViewModelFactory(TaskRepository())
         myTasksViewModel = ViewModelProvider(this, factory)[MyTasksViewModel::class.java]
 
         val userListFactory = UserListViewModelFactory(UserRepository())
         userListViewModel = ViewModelProvider(this, userListFactory)[UserListViewModel::class.java]
 
-        val editTaskFactory = EditTaskViewModelFactory(UserRepository())
+        val editTaskFactory = EditTaskViewModelFactory(TaskRepository())
         editTaskViewModel = ViewModelProvider(this, editTaskFactory)[EditTaskViewModel::class.java]
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
@@ -119,8 +122,8 @@ class TaskDescriptionFragment : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun registerListeners() {
         titleTextView.text = currentItem.title
-        setProjectType(currentItem.department_ID,projectTextView)
-        val createTime = convertLongToTime(currentItem.created_time,"HH:mm MMMM dd yyyy")
+        //setProjectType(currentItem.department_ID,projectTextView)
+        val createTime = convertLongToTime(currentItem.createdTime,"HH:mm MMMM dd yyyy")
         createdByUserTextView.text = "$createdUser $createTime"
         createTimeTextView.text = createTime
         assigneeToUserTextView.text = assignedUser
@@ -162,17 +165,17 @@ class TaskDescriptionFragment : Fragment() {
         return name
     }
     @SuppressLint("SetTextI18n")
-    private fun setPriority(priority: Int, textView: TextView){
+    private fun setPriority(priority: TaskPriorities, textView: TextView){
         when(priority){
-            1 -> {
+            TaskPriorities.HIGH -> {
                 textView.text="High prio"
                 textView.setTextColor(Color.parseColor("#D30000"))
             }
-            2 -> {
+            TaskPriorities.MEDIUM -> {
                 textView.text= "Medium prio"
                 textView.setTextColor(Color.parseColor("#ED7014"))
             }
-            3 -> {
+            TaskPriorities.LOW -> {
                 textView.text="Low prio"
                 textView.setTextColor(Color.parseColor("#3BB143"))
             }
@@ -189,7 +192,7 @@ class TaskDescriptionFragment : Fragment() {
         }
     }
 
-    private fun setSpinners(view: View, itemStatus: Int) {
+    private fun setSpinners(view: View, itemStatus: TaskStatus) {
         val status = resources.getStringArray(R.array.Status)
 
         // access the spinner
@@ -197,7 +200,7 @@ class TaskDescriptionFragment : Fragment() {
         if (spinner != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, status)
             spinner.adapter = adapter
-            spinner.setSelection(itemStatus)
+            spinner.setSelection(itemStatus.ordinal)
 
             spinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
@@ -205,15 +208,15 @@ class TaskDescriptionFragment : Fragment() {
                     parent: AdapterView<*>,
                     view: View, position: Int, id: Long
                 ) {
-                    if(position!=itemStatus && position>0){
-                        var editTaskRequest = EditTaskRequest(currentItem.ID,
+                    if(position!=itemStatus.ordinal && position>0){
+                        var editTaskRequest = EditTaskRequest(currentItem.taskId,
                             currentItem.title,
                             currentItem.description,
-                            currentItem.asigned_to_user_ID,
+                            currentItem.assignedToUserId,
                             currentItem.priority,
                             currentItem.deadline,
-                            currentItem.department_ID,
-                            position
+                            //currentItem.department_ID,
+                            TaskStatus.values()[position]
                         )
                         editTaskViewModel.updateTask(editTaskRequest)
                         Log.d("xxx", "GetMy edit task request")

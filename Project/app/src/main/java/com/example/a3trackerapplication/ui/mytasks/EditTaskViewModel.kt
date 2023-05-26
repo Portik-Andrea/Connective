@@ -8,17 +8,17 @@ import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.LoginResult
-import com.example.a3trackerapplication.repositories.UserRepository
+import com.example.a3trackerapplication.repositories.TaskRepository
 import kotlinx.coroutines.launch
 
 class EditTaskViewModelFactory(
-    private val repository: UserRepository
+    private val repository: TaskRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return EditTaskViewModel(repository) as T
     }
 }
-class EditTaskViewModel(val repository: UserRepository) : ViewModel() {
+class EditTaskViewModel(private val repository: TaskRepository) : ViewModel() {
     var editTaskResult: MutableLiveData<LoginResult> = MutableLiveData()
     fun updateTask(request: EditTaskRequest) {
         viewModelScope.launch {

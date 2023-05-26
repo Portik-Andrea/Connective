@@ -11,6 +11,8 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.models.Task
+import com.example.a3trackerapplication.models.TaskPriorities
+import com.example.a3trackerapplication.models.TaskStatus
 import com.example.a3trackerapplication.models.User
 import java.text.SimpleDateFormat
 import java.util.*
@@ -76,11 +78,11 @@ class TaskAdapter(
         ++bindCounter
         Log.i("XXX", "onBindViewHolder $bindCounter")
         val currentItem = list[position]
-        setProjectType(currentItem.department_ID,holder.projectTextView)
+        //setProjectType(currentItem.department_ID,holder.projectTextView)
         holder.titleTextView.text = currentItem.title
-        holder.createdByUserTextView.text = searchUserName(currentItem.created_by_user_ID)
-        holder.createTimeTextView.text = convertLongToTime(currentItem.created_time,"HH:mm a")
-        holder.assigneeToUserTextView.text = searchUserName(currentItem.asigned_to_user_ID)
+        holder.createdByUserTextView.text = searchUserName(currentItem.createdByUserId)
+        holder.createTimeTextView.text = convertLongToTime(currentItem.createdTime,"HH:mm a")
+        holder.assigneeToUserTextView.text = searchUserName(currentItem.assignedToUserId)
         holder.deadlineTextView.text = convertLongToTime(currentItem.deadline,"yyyy.MMMM.dd")
         holder.descriptionTextView.text = currentItem.description
         setStatus(currentItem.status, holder.statusTextView)
@@ -123,19 +125,19 @@ class TaskAdapter(
     }
 
     @SuppressLint("SetTextI18n")
-    private fun setStatus(status: Int, textView: TextView){
+    private fun setStatus(status: TaskStatus, textView: TextView){
         when(status){
-            0 -> {
+            TaskStatus.NEW -> {
                 textView.text="New"
                 textView.setTextColor(Color.parseColor("#FFFFFF"))
                 textView.setBackgroundColor(Color.parseColor("#0000FF"))
                 }
-            1 -> {
+            TaskStatus.IN_PROGRESS -> {
                 textView.text= "In Progress"
                 textView.setTextColor(Color.parseColor("#FFFFFF"))
                 textView.setBackgroundColor(Color.parseColor("#828282"))
                 }
-            2 -> {
+            TaskStatus.DONE -> {
                 textView.text="Done"
                 textView.setTextColor(Color.parseColor("#3BB143"))
             }
@@ -146,17 +148,17 @@ class TaskAdapter(
         }
     }
     @SuppressLint("SetTextI18n")
-    private fun setPriority(priority: Int, textView: TextView){
+    private fun setPriority(priority: TaskPriorities, textView: TextView){
         when(priority){
-            1 -> {
+            TaskPriorities.HIGH -> {
                 textView.text="High prio"
                 textView.setTextColor(Color.parseColor("#D30000"))
             }
-            2 -> {
+            TaskPriorities.MEDIUM -> {
                 textView.text= "Medium prio"
                 textView.setTextColor(Color.parseColor("#ED7014"))
             }
-            3 -> {
+            TaskPriorities.LOW -> {
                 textView.text="Low prio"
                 textView.setTextColor(Color.parseColor("#3BB143"))
             }

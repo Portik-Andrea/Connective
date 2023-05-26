@@ -11,9 +11,8 @@ import ro.sapientia.Backend.controllers.dto.RegisterRequestDTO;
 import ro.sapientia.Backend.domains.Department;
 import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.domains.UserType;
-import ro.sapientia.Backend.repositories.DepartmentRepository;
-import ro.sapientia.Backend.repositories.UserRepository;
-import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
+import ro.sapientia.Backend.repositories.IDepartmentRepository;
+import ro.sapientia.Backend.repositories.IUserRepository;
 
 import java.util.Optional;
 
@@ -23,21 +22,21 @@ public class SecurityUserDetailsService implements UserDetailsService {
 
     @Autowired
     private PasswordEncoder passwordEncoder;
-    private UserRepository userRepository;
+    private IUserRepository IUserRepository;
 
-    private DepartmentRepository departmentRepository;
+    private IDepartmentRepository departmentRepository;
 
 
     @Autowired
-    public SecurityUserDetailsService(UserRepository userRepository,DepartmentRepository departmentRepository) {
-        this.userRepository = userRepository;
+    public SecurityUserDetailsService(IUserRepository userRepository, IDepartmentRepository departmentRepository) {
+        this.IUserRepository = userRepository;
         this.departmentRepository = departmentRepository;
         //this.roleRepository = roleRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
+        Optional<UserEntity> userEntity = IUserRepository.findByEmail(email);
 
         if( !userEntity.isPresent() ){
             throw new UsernameNotFoundException(email);
@@ -50,7 +49,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
     }
 
     public boolean checkUsername(String email){
-        return userRepository.existsByEmail(email);
+        return IUserRepository.existsByEmail(email);
     }
 
     public void saveUser(RegisterRequestDTO registerRequest){
@@ -63,20 +62,20 @@ public class SecurityUserDetailsService implements UserDetailsService {
         department.ifPresent(user::setDepartment);
         user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
         //user.getRoles().add( roleRepository.findByName(ROLE_USER).orElseThrow() );
-        userRepository.save( user );
+        IUserRepository.save( user );
     }
     public void saveUserToken(String email, String token){
-        Optional<UserEntity> user = userRepository.findByEmail(email);
+        Optional<UserEntity> user = IUserRepository.findByEmail(email);
 
         if( !user.isPresent() ){
             throw new UsernameNotFoundException(email);
         }
         user.get().setToken(token);
-        userRepository.save( user.get() );
+        IUserRepository.save( user.get() );
     }
 
     public Long sendUserId(String token){
-        Optional<UserEntity> user = userRepository.findByToken(token);
+        Optional<UserEntity> user = IUserRepository.findByToken(token);
         if( !user.isPresent() ){
             throw new UsernameNotFoundException(token);
         }

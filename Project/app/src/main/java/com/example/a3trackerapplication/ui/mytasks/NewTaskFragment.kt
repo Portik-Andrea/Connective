@@ -17,6 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.models.NewTaskRequest
 import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
@@ -49,7 +50,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         super.onCreate(savedInstanceState)
         val usersFactory = UserListViewModelFactory(UserRepository())
         userListViewModel = ViewModelProvider(this, usersFactory).get(UserListViewModel::class.java)
-        val factory = NewTaskViewModelFactory(UserRepository())
+        val factory = NewTaskViewModelFactory(TaskRepository())
         newTaskViewModel = ViewModelProvider(this, factory).get(NewTaskViewModel::class.java)
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {

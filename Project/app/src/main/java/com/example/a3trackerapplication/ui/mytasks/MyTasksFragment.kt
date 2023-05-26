@@ -20,11 +20,12 @@ import com.example.a3trackerapplication.TaskSelected
 import com.example.a3trackerapplication.adapter.TaskAdapter
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
 
-class MyTasksFragment : Fragment() {
+class MyTasksFragment : Fragment()  {
     private lateinit var userListViewModel: UserListViewModel
     private lateinit var myTasksViewModel: MyTasksViewModel
     private lateinit var list: List<Task>
@@ -35,7 +36,7 @@ class MyTasksFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val factory = MyTasksViewModelFactory(UserRepository())
+        val factory = MyTasksViewModelFactory(TaskRepository())
         myTasksViewModel = ViewModelProvider(this, factory).get(MyTasksViewModel::class.java)
 
         val usersFactory = UserListViewModelFactory(UserRepository())
@@ -84,8 +85,8 @@ class MyTasksFragment : Fragment() {
                             val prefs1 = requireActivity().getPreferences(Context.MODE_PRIVATE)
                             val edit = prefs1.edit()
                             edit.putInt("taskPosition", MyApplication.taskPosition)
-                            TaskSelected.created_by_user_ID = list[position].created_by_user_ID
-                            TaskSelected.assigned_to_user_ID = list[position].asigned_to_user_ID
+                            TaskSelected.created_by_user_ID = list[position].createdByUserId
+                            TaskSelected.assigned_to_user_ID = list[position].assignedToUserId
                             Log.d("xxx", "GetMy task1 position in description ${MyApplication.taskPosition}")
                             findNavController().navigate(R.id.action_myTasksFragment_to_taskDescriptionFragment)
                         }

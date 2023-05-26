@@ -9,13 +9,14 @@ import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.models.LoginRequest
 import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.models.NewTaskRequest
+import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.ui.login.LoginViewModel
 import kotlinx.coroutines.launch
 
 
 class NewTaskViewModelFactory(
-    private val repository: UserRepository
+    private val repository: TaskRepository
 ) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         return NewTaskViewModel(repository) as T
@@ -23,7 +24,7 @@ class NewTaskViewModelFactory(
 }
 
 
-class NewTaskViewModel(val repository: UserRepository) : ViewModel()  {
+class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
 
     var createTaskResult: MutableLiveData<String> = MutableLiveData()
 

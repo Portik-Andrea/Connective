@@ -3,19 +3,19 @@ package ro.sapientia.Backend.services.impl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ro.sapientia.Backend.domains.Department;
-import ro.sapientia.Backend.repositories.DepartmentRepository;
-import ro.sapientia.Backend.services.DepartmentService;
+import ro.sapientia.Backend.repositories.IDepartmentRepository;
+import ro.sapientia.Backend.services.IDepartmentService;
 import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
 
 import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
-public class DepartmentServiceImpl implements DepartmentService {
+public class DepartmentService implements IDepartmentService {
 
-    private DepartmentRepository departmentRepository;
+    private IDepartmentRepository departmentRepository;
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository){
+    public DepartmentService(IDepartmentRepository departmentRepository){
         this.departmentRepository= departmentRepository;
     }
 

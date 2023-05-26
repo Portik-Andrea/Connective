@@ -8,8 +8,8 @@ import ro.sapientia.Backend.domains.UserEntity;
 import java.util.List;
 
 @Repository
-public interface TaskRepository extends JpaRepository<Task, Long> {
-    UserEntity findByAssignedToUser(Long taskId);
+public interface ITaskRepository extends JpaRepository<Task, Long> {
+    List<Task> findAllByAssignedToUser(Long assignedToUserId);
 
     List<Task> findAll();
 

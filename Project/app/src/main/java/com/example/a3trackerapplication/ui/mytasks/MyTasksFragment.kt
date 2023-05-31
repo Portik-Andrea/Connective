@@ -1,6 +1,5 @@
 package com.example.a3trackerapplication.ui.mytasks
 
-import android.content.Context
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -9,14 +8,14 @@ import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.R
-import com.example.a3trackerapplication.TaskSelected
+import com.example.a3trackerapplication.adapter.OnTaskClickListener
 import com.example.a3trackerapplication.adapter.TaskAdapter
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.User
@@ -25,8 +24,8 @@ import com.example.a3trackerapplication.repositories.UserRepository
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
 
-class MyTasksFragment : Fragment()  {
-    private lateinit var userListViewModel: UserListViewModel
+class MyTasksFragment : Fragment() , OnTaskClickListener {
+    private lateinit var editTaskViewModel: EditTaskViewModel
     private lateinit var myTasksViewModel: MyTasksViewModel
     private lateinit var list: List<Task>
     private var users : List<User>? = null
@@ -39,8 +38,8 @@ class MyTasksFragment : Fragment()  {
         val factory = MyTasksViewModelFactory(TaskRepository())
         myTasksViewModel = ViewModelProvider(this, factory).get(MyTasksViewModel::class.java)
 
-        val usersFactory = UserListViewModelFactory(UserRepository())
-        userListViewModel = ViewModelProvider(this, usersFactory).get(UserListViewModel::class.java)
+        val editTaskFactory = EditTaskViewModelFactory(TaskRepository())
+        editTaskViewModel = ViewModelProvider(this, editTaskFactory).get(EditTaskViewModel::class.java)
     }
 
     override fun onResume() {
@@ -61,19 +60,19 @@ class MyTasksFragment : Fragment()  {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
-            userListViewModel.readUsers()
-            userListViewModel.userList.observe(viewLifecycleOwner) {
-                users = userListViewModel.userList.value!!
-                Log.d("xxx", "GetMy user list  myTasks fragment ${users}")
-            }
             myTasksViewModel.getTasks()
             myTasksViewModel.myTasks.observe(viewLifecycleOwner) {
                 list = myTasksViewModel.myTasks.value!!
                 Log.i("xxx", "GetMy my tasks list in MyTasks fragment " + list.toString())
-                val recycler_view: RecyclerView = view.findViewById(R.id.recycler_view)
-                val manager = LinearLayoutManager(requireContext())
-                recycler_view.setLayoutManager(manager)
-                recycler_view.setHasFixedSize(true)
+                val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+                recyclerView.adapter = TaskAdapter(list,this@MyTasksFragment)
+                recyclerView.layoutManager = LinearLayoutManager(context)
+                recyclerView.setHasFixedSize(true)
+
+
+                /*val manager = LinearLayoutManager(requireContext())
+                recyclerView.setLayoutManager(manager)
+                recyclerView.setHasFixedSize(true)
                 // 1. No event handling
                 // recycler_view.adapter = DataAdapter(list)
                 // 2. Event handling - pass fragment (this) to data adapter
@@ -92,15 +91,23 @@ class MyTasksFragment : Fragment()  {
                         }
 
                     })
-                    recycler_view.adapter = adapter
-                    recycler_view.layoutManager = LinearLayoutManager(this.context)
-                    recycler_view.setHasFixedSize(true)
+                    recyclerView.adapter = adapter
+                    recyclerView.layoutManager = LinearLayoutManager(this.context)
+                    recyclerView.setHasFixedSize(true)*/
                 }
                 registerListeners()
             }
         }
 
+    override fun onTaskClick(position: Int) {
+        var clickedItem : Task = list[position]
+        val bundle = bundleOf(
+            "taskId" to clickedItem.taskId
+        )
+        findNavController().navigate(R.id.action_myTasksFragment_to_taskDescriptionFragment,bundle)
     }
+
+
     private fun registerListeners() {
         addNewTaskButton = requireView().findViewById(R.id.addNewTaskButton)
 

@@ -11,6 +11,7 @@ import android.widget.*
 import androidx.activity.OnBackPressedCallback
 import androidx.annotation.RequiresApi
 import androidx.cardview.widget.CardView
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -42,6 +43,8 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
     private lateinit var myTasksViewModel: MyTasksViewModel
     private lateinit var userListViewModel: UserListViewModel
     private lateinit var editTaskViewModel: EditTaskViewModel
+
+    private var taskId: Long? = null
 
     private var users : List<User>? = null
     private var createdUser: String = ""
@@ -77,6 +80,11 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        arguments?.let {
+            if (it["taskId"] != null) {
+                taskId = it.getLong("taskId")
+            }
+        }
         // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_edit_task, container, false)
     }
@@ -89,23 +97,15 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             userListViewModel.readUsers()
             userListViewModel.userList.observe(viewLifecycleOwner) {
                 users = userListViewModel.userList.value!!
-                Log.d("xxx", "GetMy user list  myTasks fragment ${users}")
-                createdUser = searchUserName(TaskSelected.created_by_user_ID)
-                assignedUser = searchUserName(TaskSelected.assigned_to_user_ID)
-                myTasksViewModel.getTasks()
-                myTasksViewModel.myTasks.observe(viewLifecycleOwner) {
-                    var list = myTasksViewModel.myTasks.value
-                    Log.d("xxx", "GetMy users in description $createdUser")
-                    Log.d("xxx", "GetMy task in description ${myTasksViewModel.myTasks.value}")
-                    Log.d(
-                        "xxx",
-                        "GetMy task1 position in description ${MyApplication.taskPosition}"
-                    )
-                    if (list != null) {
-                        currentItem = list.get(MyApplication.taskPosition)
+                Log.d("xxx", "GetMy user list  myTasks fragment $users")
+                if(taskId!=null){
+                    editTaskViewModel.getTask(taskId!!)
+                    editTaskViewModel.selectTask.observe(viewLifecycleOwner){
+                        currentItem = editTaskViewModel.selectTask.value!!
                         registerListeners()
                     }
                 }
+
             }
             updateTaskButton.setOnClickListener {
                 if(editTaskRequest.taskId == 0L){
@@ -114,7 +114,7 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                         Toast.LENGTH_LONG
                     ).show()
                 }else{
-                    Log.d("xxx", "GetMy setSpiners ${currentItem.title}")
+                    Log.d("xxx", "GetMy setSpinners ${currentItem.title}")
                     editTaskRequest.title = taskNameUpdateEditText.text.toString()
                     editTaskRequest.description = descriptionUpdateEditText.text.toString()
                     editTaskViewModel.updateTask(editTaskRequest)
@@ -128,7 +128,10 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 ).show()
             }
             callBackUpdateTaskButton.setOnClickListener {
-                findNavController().navigate(R.id.action_editTaskFragment_to_taskDescriptionFragment)
+                val bundle = bundleOf(
+                    "taskId" to taskId
+                )
+                findNavController().navigate(R.id.action_editTaskFragment_to_taskDescriptionFragment,bundle)
             }
 
         }
@@ -139,6 +142,8 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         setEditTaskRequest()
         taskNameUpdateEditText.setText(currentItem.title)
         selectDateUpdateTextView.text = convertLongToTime(currentItem.deadline,"MMM. dd. yyyy.")
+        createdUser = currentItem.creatorUserName
+        assignedUser = currentItem.assignedToUserName
         setSpinners(requireView(),currentItem)
         descriptionUpdateEditText.setText(currentItem.description)
     }
@@ -168,19 +173,9 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         return format.format(date)
     }
 
-    private fun searchUserName(id: Long):String{
-        var name = ""
-        users?.forEach {
-            if(it.id== id){
-                name="${it.lastName} ${it.firstName}"
-            }
-        }
-        return name
-    }
-
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setSpinners(view: View, currentTask: Task) {
-        Log.d("xxx", "GetMy setSpiners $currentTask")
+        Log.d("xxx", "GetMy setSpinners $currentTask")
         val projectType = resources.getStringArray(R.array.ProjectType)
 
         // access the spinner
@@ -209,14 +204,15 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (assigneeSpinner != null && assignee != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, assignee)
             assigneeSpinner.adapter = adapter
-            val assignedId = currentTask.assignedToUserId.toInt()
-            if(assignedId>4){
+            val assignedId = currentTask.assignedToUserId
+            /*if(assignedId>4){
                 assigneeSpinner.setSelection(currentTask.assignedToUserId.toInt()-3)
             }else{
                 assigneeSpinner.setSelection(currentTask.assignedToUserId.toInt()-1)
-            }
-            Log.d("xxx", "GetMy setSpiners user id ${currentTask.assignedToUserId.toInt()}")
-            Log.d("xxx", "GetMy setSpiners user name ${spinner.selectedItemPosition}")
+            }*/
+            assigneeSpinner.setSelection(currentTask.assignedToUserId.toInt())
+            Log.d("xxx", "GetMy setSpinners user id ${currentTask.assignedToUserId.toInt()}")
+            Log.d("xxx", "GetMy setSpinners user name ${spinner.selectedItemPosition}")
 
             assigneeSpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {

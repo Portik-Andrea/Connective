@@ -13,16 +13,20 @@ import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.TaskPriorities
 import com.example.a3trackerapplication.models.TaskStatus
-import com.example.a3trackerapplication.models.User
 import java.text.SimpleDateFormat
 import java.util.*
 
 
+interface OnTaskClickListener{
+    fun onTaskClick(position: Int)
+    //abstract fun TaskAdapter(list: List<Task>, users: List<User>): TaskAdapter
+}
 
 class TaskAdapter(
-    private val list: List<Task>, private val users: List<User>
+    private val list: List<Task>,
+    private val listener: OnTaskClickListener
 ):  RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    var clickListener: ClickListener? = null
+    //var clickListener: ClickListener? = null
 
     // 1. user defined ViewHolder type
     inner class TaskViewHolder(itemView: View) :
@@ -40,9 +44,9 @@ class TaskAdapter(
         val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         // Constructor
         init{
-            if(clickListener!= null){
-                itemView.setOnClickListener( this )
-            }
+            //if(clickListener!= null){
+            itemView.setOnClickListener( this )
+            //}
 
         }
 
@@ -50,17 +54,17 @@ class TaskAdapter(
             // Delegate event handling to ListFragment
             val position: Int = adapterPosition
             if( position != RecyclerView.NO_POSITION ) {
-                clickListener?.onItemClick(position)
+                listener.onTaskClick(position)
             }
 
         }
     }
-    fun setOnItemClickListener(clickListener: ClickListener) {
+    /*fun setOnItemClickListener(clickListener: ClickListener) {
         this.clickListener = clickListener
-    }
-    interface ClickListener{
+    }*/
+    /*interface ClickListener{
         fun onItemClick(position: Int)
-    }
+    }*/
 
 
 
@@ -80,9 +84,9 @@ class TaskAdapter(
         val currentItem = list[position]
         //setProjectType(currentItem.department_ID,holder.projectTextView)
         holder.titleTextView.text = currentItem.title
-        holder.createdByUserTextView.text = searchUserName(currentItem.createdByUserId)
+        holder.createdByUserTextView.text = currentItem.creatorUserName
         holder.createTimeTextView.text = convertLongToTime(currentItem.createdTime,"HH:mm a")
-        holder.assigneeToUserTextView.text = searchUserName(currentItem.assignedToUserId)
+        holder.assigneeToUserTextView.text = currentItem.assignedToUserName
         holder.deadlineTextView.text = convertLongToTime(currentItem.deadline,"yyyy.MMMM.dd")
         holder.descriptionTextView.text = currentItem.description
         setStatus(currentItem.status, holder.statusTextView)
@@ -106,7 +110,7 @@ class TaskAdapter(
         return format.format(date)
     }
 
-    private fun searchUserName(id: Long):String{
+    /*private fun searchUserName(id: Long):String{
         var name = ""
         users.forEach {
             if(it.id== id){
@@ -115,7 +119,7 @@ class TaskAdapter(
         }
 
         return name
-    }
+    }*/
 
     private fun setProjectType(departmentId: Int, projectTextView: TextView) {
         when(departmentId){

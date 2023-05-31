@@ -16,4 +16,6 @@ public interface IUserService {
     List<UserEntity> allMentors();
 
     UserEntity addMentor(Long userId, Long mentorId);
+
+    List<UserEntity> findAllUsers();
 }

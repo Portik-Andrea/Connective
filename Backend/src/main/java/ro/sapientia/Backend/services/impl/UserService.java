@@ -102,4 +102,9 @@ public class UserService implements IUserService {
         return mentor;
     }
 
+    @Override
+    public List<UserEntity> findAllUsers() {
+        return userRepository.findAll();
+    }
+
 }

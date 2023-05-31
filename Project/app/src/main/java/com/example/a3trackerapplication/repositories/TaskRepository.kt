@@ -20,4 +20,8 @@ class TaskRepository {
         return TrackerApi.getApi()?.updateTask(token = token,request=request);
     }
 
+    suspend fun getTask(token: String, taskId: Long): Response<Task>?{
+        return TrackerApi.getApi()?.getTask(token = token, taskId = taskId)
+    }
+
 }

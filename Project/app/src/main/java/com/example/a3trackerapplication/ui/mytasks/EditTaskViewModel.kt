@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.LoginResult
+import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.repositories.TaskRepository
 import kotlinx.coroutines.launch
 
@@ -19,6 +20,7 @@ class EditTaskViewModelFactory(
     }
 }
 class EditTaskViewModel(private val repository: TaskRepository) : ViewModel() {
+    var selectTask: MutableLiveData<Task> = MutableLiveData()
     var editTaskResult: MutableLiveData<LoginResult> = MutableLiveData()
     fun updateTask(request: EditTaskRequest) {
         viewModelScope.launch {
@@ -37,4 +39,21 @@ class EditTaskViewModel(private val repository: TaskRepository) : ViewModel() {
             }
         }
     }
+
+    fun getTask(taskId: Long){
+        viewModelScope.launch {
+            try {
+                val response = repository.getTask(MyApplication.token,taskId)
+                if (response?.isSuccessful == true) {
+                    selectTask.value = response.body()
+                    Log.d("xxx", "GetTask body " + response.body().toString())
+                } else {
+                    Log.i("xxx", "GetTask response error " + response?.errorBody().toString()  )
+                }
+            } catch (e: Exception) {
+                Log.i("xxx", "GetTask error $e")
+            }
+        }
+    }
+
 }

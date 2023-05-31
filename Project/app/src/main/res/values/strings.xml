@@ -14,6 +14,9 @@
     <string name="phone_number">phone number ex. +407********</string>
     <string name="user_name">Name</string>
     <string name="department_type">Department Type</string>
+    <string name="task_description_title">Task Description</string>
+    <string name="back">Back</string>
+    <string name="edit_task_button_content">Edit task</string>
     <string-array name="tasks_type">
         <item>Recently Added</item>
         <item>Active tasks</item>

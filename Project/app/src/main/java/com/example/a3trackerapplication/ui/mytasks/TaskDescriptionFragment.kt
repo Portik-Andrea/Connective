@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.activity.OnBackPressedCallback
+import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.MyApplication
@@ -20,11 +21,7 @@ import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.TaskPriorities
 import com.example.a3trackerapplication.models.TaskStatus
-import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.TaskRepository
-import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.util.UserListViewModel
-import com.example.a3trackerapplication.util.UserListViewModelFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,19 +41,14 @@ class TaskDescriptionFragment : Fragment() {
     private lateinit var editImageButton: ImageButton
 
     private lateinit var myTasksViewModel: MyTasksViewModel
-    private lateinit var userListViewModel: UserListViewModel
     private lateinit var editTaskViewModel: EditTaskViewModel
-    private var users : List<User>? = null
-    private var createdUser: String = ""
-    private var assignedUser: String = ""
+
+    private var taskId: Long? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = MyTasksViewModelFactory(TaskRepository())
         myTasksViewModel = ViewModelProvider(this, factory)[MyTasksViewModel::class.java]
-
-        val userListFactory = UserListViewModelFactory(UserRepository())
-        userListViewModel = ViewModelProvider(this, userListFactory)[UserListViewModel::class.java]
 
         val editTaskFactory = EditTaskViewModelFactory(TaskRepository())
         editTaskViewModel = ViewModelProvider(this, editTaskFactory)[EditTaskViewModel::class.java]
@@ -76,7 +68,11 @@ class TaskDescriptionFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
+        arguments?.let {
+            if (it["taskId"] != null) {
+                taskId = it.getLong("taskId")
+            }
+        }
         return inflater.inflate(R.layout.fragment_task_description, container, false)
     }
 
@@ -84,36 +80,21 @@ class TaskDescriptionFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         view.apply{
             initViewItems(view)
-            userListViewModel.readUsers()
-            userListViewModel.userList.observe(viewLifecycleOwner) {
-                users = userListViewModel.userList.value!!
-                Log.d("xxx", "GetMy user list  myTasks fragment ${users}")
-                createdUser = searchUserName(TaskSelected.created_by_user_ID)
-                assignedUser = searchUserName(TaskSelected.assigned_to_user_ID)
-                myTasksViewModel.getTasks()
-                myTasksViewModel.myTasks.observe(viewLifecycleOwner) {
-                    var list =myTasksViewModel.myTasks.value
-                    Log.d("xxx", "GetMy users in description $createdUser")
-                    Log.d("xxx", "GetMy task in description ${myTasksViewModel.myTasks.value}")
-                    Log.d("xxx", "GetMy task1 position in description ${MyApplication.taskPosition}")
-                    if(list!=null ){
-                        currentItem=list.get(MyApplication.taskPosition)
-                        registerListeners()
-                    }
+            if(taskId!=null){
+                editTaskViewModel.getTask(taskId!!)
+                editTaskViewModel.selectTask.observe(viewLifecycleOwner){
+                    currentItem = editTaskViewModel.selectTask.value!!
+                    registerListeners()
                 }
             }
             callBackTaskDescButton.setOnClickListener{
-                MyApplication.taskPosition = -1
-                val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                val editor = preferences.edit()
-                editor.remove("taskPosition")
-                editor.apply()
-                TaskSelected.created_by_user_ID = 0L
-                TaskSelected.assigned_to_user_ID = 0L
                 findNavController().navigate(R.id.action_taskDescriptionFragment_to_myTasksFragment)
             }
             editImageButton.setOnClickListener {
-                findNavController().navigate(R.id.action_taskDescriptionFragment_to_editTaskFragment)
+                val bundle = bundleOf(
+                    "taskId" to taskId
+                )
+                findNavController().navigate(R.id.action_taskDescriptionFragment_to_editTaskFragment,bundle)
             }
 
         }
@@ -121,12 +102,13 @@ class TaskDescriptionFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun registerListeners() {
+        Log.i("xxx", "Current Task $currentItem")
         titleTextView.text = currentItem.title
         //setProjectType(currentItem.department_ID,projectTextView)
         val createTime = convertLongToTime(currentItem.createdTime,"HH:mm MMMM dd yyyy")
-        createdByUserTextView.text = "$createdUser $createTime"
+        createdByUserTextView.text = "${currentItem.creatorUserName} $createTime"
         createTimeTextView.text = createTime
-        assigneeToUserTextView.text = assignedUser
+        assigneeToUserTextView.text = currentItem.assignedToUserName
         deadlineTextView.text = convertLongToTime(currentItem.deadline,"yyyy.MMMM.dd")
         descriptionTextView.text = currentItem.description
         //setStatus(currentItem.status, statusTextView)
@@ -155,7 +137,7 @@ class TaskDescriptionFragment : Fragment() {
         return format.format(date)
     }
 
-    private fun searchUserName(id: Long):String{
+    /*private fun searchUserName(id: Long):String{
         var name = ""
         users?.forEach {
             if(it.id== id){
@@ -163,7 +145,7 @@ class TaskDescriptionFragment : Fragment() {
             }
         }
         return name
-    }
+    }*/
     @SuppressLint("SetTextI18n")
     private fun setPriority(priority: TaskPriorities, textView: TextView){
         when(priority){
@@ -178,9 +160,6 @@ class TaskDescriptionFragment : Fragment() {
             TaskPriorities.LOW -> {
                 textView.text="Low prio"
                 textView.setTextColor(Color.parseColor("#3BB143"))
-            }
-            else -> {
-                textView.text=""
             }
         }
     }

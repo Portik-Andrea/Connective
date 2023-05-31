@@ -9,4 +9,6 @@ public interface ITaskService {
     List<Task> findAllByAssigneeUser(Long userId);
 
     List<Task> findAll();
+
+    Task findById(Long id);
 }

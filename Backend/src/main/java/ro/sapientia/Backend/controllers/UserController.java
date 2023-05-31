@@ -12,7 +12,6 @@ import ro.sapientia.Backend.controllers.mapper.UserMapper;
 import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.services.IUserService;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
-import ro.sapientia.Backend.services.impl.UserService;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
 import javax.validation.constraints.Positive;
@@ -23,19 +22,19 @@ import java.util.List;
 @RestController
 @RequestMapping("api/v1/users")
 public class UserController {
-    private final IUserService IUserService;
+    private final IUserService userService;
     private final SecurityUserDetailsService userDetailsService;
 
     @Autowired
     public UserController(IUserService userService,
                           SecurityUserDetailsService userDetailService){
-        this.IUserService = userService;
+        this.userService = userService;
         this.userDetailsService = userDetailService;
     }
 
     @GetMapping("/{userId}")
     public UserDTO getUserById(@PathVariable("userId") @Positive Long id){
-        UserEntity user = IUserService.findUserByID(id);
+        UserEntity user = userService.findUserByID(id);
         if(user == null){
             throw new UserNotFoundException(id);
         }
@@ -47,7 +46,7 @@ public class UserController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             Long id = userDetailsService.sendUserId(token);
-            UserEntity user = IUserService.findUserByID(id);
+            UserEntity user = userService.findUserByID(id);
             if (user == null) {
                 throw new UserNotFoundException(id);
             }
@@ -57,13 +56,21 @@ public class UserController {
             throw new IllegalArgumentException("Invalid token");
         }
     }
+
+    @GetMapping("/getAllUsers")
+    public List<UserDTO> getAllUsers(){
+        List<UserEntity> users = userService.findAllUsers();
+        List<UserDTO> userDTOS = new ArrayList<>();
+        users.forEach(user -> userDTOS.add(UserMapper.convertModelToDTO(user)));
+        return userDTOS;
+    }
     @PostMapping("/updateuser")
     public ResponseEntity<Boolean> updateUser(@RequestBody UpdateUserDTO updateUserDTO,HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             Long id = userDetailsService.sendUserId(token);
-            boolean result = IUserService.updateUser(updateUserDTO,id);
+            boolean result = userService.updateUser(updateUserDTO,id);
 
             if(!result){
                 return new ResponseEntity<>(
@@ -81,7 +88,7 @@ public class UserController {
 
     @GetMapping("/mentors")
     public List<UserDTO> allMentors(){
-        List<UserEntity> mentors = IUserService.allMentors();
+        List<UserEntity> mentors = userService.allMentors();
         List<UserDTO> mentorsDTO = new ArrayList<>();
         mentors.forEach(mentor -> mentorsDTO.add(UserMapper.convertModelToDTO(mentor))
         );
@@ -94,7 +101,7 @@ public class UserController {
         if (token != null && token.startsWith("Bearer ")) {
             token = token.substring(7);
             Long id = userDetailsService.sendUserId(token);
-            UserEntity mentor = IUserService.addMentor(id,mentorId);
+            UserEntity mentor = userService.addMentor(id,mentorId);
             if(mentor == null){
                 throw new UserNotFoundException(mentorId);
             }
@@ -107,7 +114,7 @@ public class UserController {
 
     @PostMapping("/adduser")
     public ResponseEntity<String> addUser(@RequestBody UserDTO userDTO){
-        UserEntity result = IUserService.addUser(userDTO);
+        UserEntity result = userService.addUser(userDTO);
         return new ResponseEntity<>(
                 "Success",
                 HttpStatus.OK);

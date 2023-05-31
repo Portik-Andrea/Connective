@@ -19,7 +19,7 @@ class UserListViewModelFactory(
     }
 }
 
-class UserListViewModel(val repository: UserRepository) : ViewModel() {
+class UserListViewModel(private val repository: UserRepository) : ViewModel() {
      var userList = MutableLiveData<List<User>>()
 
     fun readUsers() {

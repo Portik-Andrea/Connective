@@ -5,10 +5,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
-import ro.sapientia.Backend.services.exceptions.IllegalEmailException;
-import ro.sapientia.Backend.services.exceptions.IllegalUserTypeException;
-import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
+import ro.sapientia.Backend.services.exceptions.*;
 
 @ControllerAdvice
 public class NotFoundAdvice {
@@ -37,6 +34,13 @@ public class NotFoundAdvice {
     @ExceptionHandler(IllegalEmailException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public String illegalEmailHandler(IllegalEmailException ex){
+        return ex.getMessage();
+    }
+
+    @ResponseBody
+    @ExceptionHandler(TaskNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String taskNotFoundHandler(TaskNotFoundException ex){
         return ex.getMessage();
     }
 }

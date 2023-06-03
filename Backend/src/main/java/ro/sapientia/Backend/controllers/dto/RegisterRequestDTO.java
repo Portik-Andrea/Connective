@@ -1,11 +1,8 @@
 package ro.sapientia.Backend.controllers.dto;
 
+import jakarta.validation.constraints.*;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 
 @Data
 public class RegisterRequestDTO {
@@ -13,15 +10,17 @@ public class RegisterRequestDTO {
     private String firstName;
     @NotEmpty(message = "Last name is mandatory")
     private String lastName;
-    @Positive
+    @NotNull(message = "User type is mandatory")
+    @Pattern(regexp = "MENTOR|MENTEE",message = "User type value equal MENTOR or MENTEE")
     private String type;
-    @NotNull
+    @NotNull(message = "Department id is mandatory")
     private Long departmentId;
-    @NotEmpty(message = "email is mandatory")
+    @NotEmpty(message = "Email is mandatory")
     @Size(max = 255)
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email address is invalid")
     private String email;
-    @Size(max = 255)
-    @NotEmpty(message = "password is mandatory")
+    @Size(min = 8, message = "Password min 8 character")
+    @NotEmpty(message = "Password is mandatory")
     private String password;
 
     public Long getDepartmentId() {

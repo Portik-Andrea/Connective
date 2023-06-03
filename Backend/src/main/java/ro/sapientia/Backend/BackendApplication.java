@@ -58,6 +58,14 @@ public class BackendApplication {
 //					repository.existsByEmail("andras.emma@sonrisa.hu"));
 
 			// set mentor
+			Optional<UserEntity> mentee1 = repository.findById(4L);
+			Optional<UserEntity> mentor2 = repository.findById(3L);
+			if(mentee1.isPresent() && mentor2.isPresent()){
+				log.info("Mentee:" + mentee1.get().toString());
+				log.info("Mentor:" + mentor2.get().toString());
+				mentee1.get().setMentor(mentor2.get());
+				repository.save(mentee1.get());
+			}
 			Optional<UserEntity> mentee = repository.findById(2L);
 			Optional<UserEntity> mentor = repository.findById(1L);
 			if(mentee.isPresent() && mentor.isPresent()){

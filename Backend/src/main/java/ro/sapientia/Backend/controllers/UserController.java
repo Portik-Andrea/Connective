@@ -1,6 +1,7 @@
 package ro.sapientia.Backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Positive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,7 +15,6 @@ import ro.sapientia.Backend.services.IUserService;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
-import javax.validation.constraints.Positive;
 import java.util.ArrayList;
 import java.util.List;
 

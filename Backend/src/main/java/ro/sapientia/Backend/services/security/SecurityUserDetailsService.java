@@ -13,6 +13,7 @@ import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.domains.UserType;
 import ro.sapientia.Backend.repositories.IDepartmentRepository;
 import ro.sapientia.Backend.repositories.IUserRepository;
+import ro.sapientia.Backend.services.exceptions.DepartmentNotFoundException;
 
 import java.util.Optional;
 
@@ -59,7 +60,9 @@ public class SecurityUserDetailsService implements UserDetailsService {
         user.setEmail(registerRequest.getEmail());
         user.setType(UserType.valueOf(registerRequest.getType()));
         Optional<Department> department = departmentRepository.findById(registerRequest.getDepartmentId());
-        department.ifPresent(user::setDepartment);
+        if (department.isEmpty()){
+            throw new DepartmentNotFoundException(registerRequest.getDepartmentId());
+        }
         user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
         //user.getRoles().add( roleRepository.findByName(ROLE_USER).orElseThrow() );
         IUserRepository.save( user );

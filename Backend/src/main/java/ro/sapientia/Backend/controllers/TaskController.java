@@ -1,23 +1,22 @@
 package ro.sapientia.Backend.controllers;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import ro.sapientia.Backend.controllers.dto.TaskDTO;
-import ro.sapientia.Backend.controllers.dto.UserDTO;
+import ro.sapientia.Backend.controllers.dto.UpdateTaskDTO;
 import ro.sapientia.Backend.controllers.mapper.TaskMapper;
-import ro.sapientia.Backend.controllers.mapper.UserMapper;
 import ro.sapientia.Backend.domains.Task;
-import ro.sapientia.Backend.domains.UserEntity;
 import ro.sapientia.Backend.services.ITaskService;
-import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/tasks")
@@ -60,6 +59,13 @@ public class TaskController {
     public TaskDTO getTask(@PathVariable("taskId") Long taskId){
         Task task = taskService.findById(taskId);
         return TaskMapper.convertModelToDTO(task);
+    }
+
+    @PostMapping("/updateTask")
+    public ResponseEntity<String> updateTask(@RequestBody @Valid UpdateTaskDTO updateTaskDTO){
+        boolean result = taskService.updateTask(updateTaskDTO);
+        return ResponseEntity.ok("Sikeres mentes " + result);
+
     }
 
 }

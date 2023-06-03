@@ -2,11 +2,10 @@ package ro.sapientia.Backend.controllers.dto;
 
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
-public class LoginResponse {
+public class LoginResponse  {
     //private Long userId;
     private String token;
 

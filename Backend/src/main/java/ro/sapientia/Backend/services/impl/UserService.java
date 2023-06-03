@@ -107,4 +107,11 @@ public class UserService implements IUserService {
         return userRepository.findAll();
     }
 
+    @Override
+    public void refreshUser(UserEntity user) {
+        if(user!=null){
+            userRepository.save(user);
+        }
+    }
+
 }

@@ -1,17 +1,19 @@
 package ro.sapientia.Backend.controllers.dto;
 
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Data
-public class LoginRequest {
+public class LoginRequest implements Serializable {
     @NotNull
-    @Size(max = 255)
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email address is invalid")
     private String email;
-    @NotNull
-    @Size(max = 255)
+    @NotNull(message = "Password is mandatory")
+    @Size(min = 8, message = "Password min 8 character")
     private String password;
 
     public String getEmail() {

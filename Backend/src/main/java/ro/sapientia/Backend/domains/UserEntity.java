@@ -1,9 +1,9 @@
 package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import lombok.ToString;
 
-import javax.validation.constraints.NotEmpty;
 import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
@@ -51,8 +51,7 @@ public class UserEntity {
     private UserEntity mentor;
 
     @OneToMany(cascade = CascadeType.ALL,
-            fetch = FetchType.EAGER,
-            orphanRemoval = true)
+            fetch = FetchType.EAGER)
     private Set<Task> tasks = new HashSet<>();
 
     @ManyToMany(mappedBy = "members")

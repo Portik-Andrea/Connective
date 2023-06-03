@@ -1,19 +1,17 @@
 package ro.sapientia.Backend.controllers.dto;
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.sapientia.Backend.domains.UserType;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.Size;
 import java.io.Serializable;
 
 @Data
 @NoArgsConstructor
 public class UserDTO implements Serializable {
-
     @NotNull
     private Long id;
     @NotNull

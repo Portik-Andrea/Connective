@@ -1,9 +1,9 @@
 package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Positive;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -29,11 +29,11 @@ public class Task {
 
     //@OneToOne(cascade = CascadeType.ALL, optional = false)
     @OneToOne
-    @NotEmpty(message = "Creator is mandatory")
+    //@NotEmpty(message = "Creator is mandatory")
     private UserEntity creatorUser;
 
     @Column(name = "created_time")
-    @NotEmpty(message = "The created time is mandatory")
+    //@NotEmpty(message = "The created time is mandatory")
     private Date createdTime;
 
     @Enumerated(EnumType.STRING)
@@ -48,7 +48,7 @@ public class Task {
     private Status status;
 
     @Column(name = "progress")
-    @Positive(message = "Progress is positive integer")
+    //@Positive(message = "Progress is positive integer")
     private Integer progress;
 
     public Task() {
@@ -95,13 +95,21 @@ public class Task {
         return assignedToUser;
     }
 
-    public void setAssignedToUser(UserEntity assignedToUser) {
+    public UserEntity deleteAssignedUser(){
         if (this.assignedToUser != null) {
             UserEntity oldAssignedToUser = this.assignedToUser;
+            this.assignedToUser = null;
             oldAssignedToUser.removeTask(this);
+            return oldAssignedToUser;
         }
-        this.assignedToUser = assignedToUser;
-        assignedToUser.addTask(this);
+        return null;
+    }
+
+    public void setAssignedToUser(UserEntity assignedToUser) {
+        if(this.assignedToUser == null){
+            this.assignedToUser = assignedToUser;
+            assignedToUser.addTask(this);
+        }
     }
 
     public UserEntity getCreatorUser() {

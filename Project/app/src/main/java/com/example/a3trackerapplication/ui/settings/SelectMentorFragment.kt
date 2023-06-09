@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
@@ -19,12 +18,7 @@ import com.example.a3trackerapplication.adapter.MentorAdapter
 import com.example.a3trackerapplication.adapter.OnItemClickListener
 import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.UserRepository
-import okio.Utf8
-import java.net.URLEncoder
 import java.nio.ByteBuffer
-import java.nio.ByteOrder
-import java.nio.charset.Charset
-import java.nio.charset.StandardCharsets
 
 
 class SelectMentorFragment : Fragment(), OnItemClickListener {
@@ -97,12 +91,8 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
     }
 
     private fun encryptId(id: Long): String {
-        //val bytes = id.toByteArray(StandardCharsets.UTF_8)
-        //val bytes = encodeLongToByteArray(id)
         val bytes = id.toString().toByteArray(Charsets.UTF_8)
-        val encoded= Base64.encodeToString(bytes, Base64.DEFAULT)
-        return encoded
-        //return URLEncoder.encode(encoded, StandardCharsets.UTF_8.toString())
+        return Base64.encodeToString(bytes, Base64.DEFAULT)
     }
 
     private fun encodeLongToByteArray(value: Long): ByteArray {

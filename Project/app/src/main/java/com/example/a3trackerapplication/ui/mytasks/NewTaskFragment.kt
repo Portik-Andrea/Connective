@@ -15,10 +15,16 @@ import androidx.cardview.widget.CardView
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.a3trackerapplication.R
+import com.example.a3trackerapplication.models.Group
 import com.example.a3trackerapplication.models.NewTaskRequest
+import com.example.a3trackerapplication.models.TaskPriorities
+import com.example.a3trackerapplication.models.TaskStatus
 import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.repositories.GroupRepository
 import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.repositories.UserRepository
+import com.example.a3trackerapplication.ui.mygroups.GroupViewModel
+import com.example.a3trackerapplication.ui.mygroups.GroupViewModelFactory
 import com.example.a3trackerapplication.util.UserListViewModel
 import com.example.a3trackerapplication.util.UserListViewModelFactory
 import java.text.SimpleDateFormat
@@ -31,13 +37,14 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     private var description: String = ""
     private var deadline : Long = 0
     private var assignedToUserId: Long = 0
-    private var priority : Int = -1
-    private var departmentId : Int = -1
-    private var status : Int = 0
+    private var priority : String = ""
+    private var groupId : Long = 0L
     private var users : List<User>? = null
+    private var groups: List<Group>? = null
 
     private lateinit var userListViewModel: UserListViewModel
     private lateinit var newTaskViewModel: NewTaskViewModel
+    private lateinit var groupViewModel: GroupViewModel
 
     private lateinit var createTaskButton: Button
     private lateinit var selectDateTextView : TextView
@@ -52,6 +59,8 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         userListViewModel = ViewModelProvider(this, usersFactory).get(UserListViewModel::class.java)
         val factory = NewTaskViewModelFactory(TaskRepository())
         newTaskViewModel = ViewModelProvider(this, factory).get(NewTaskViewModel::class.java)
+        val groupFactory = GroupViewModelFactory(GroupRepository())
+        groupViewModel = ViewModelProvider(this, groupFactory).get(GroupViewModel::class.java)
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -78,27 +87,30 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         initViewItems()
         userListViewModel.readUsers()
         userListViewModel.userList.observe(viewLifecycleOwner) {
-            users = userListViewModel.userList.value!!
-            Log.d("xxx", "GetMy user list  newTasks fragment ${users}")
-            setSpinners(view)
+            users = userListViewModel.userList.value!!.sortedBy { it.id }
+            groupViewModel.getGroups()
+            groupViewModel.groups.observe(viewLifecycleOwner){
+                groups = groupViewModel.groups.value!!.sortedBy { it.groupId }
+                setSpinners(view)
+            }
 
         }
+
         createTaskButton.setOnClickListener {
             title= taskNameEditText.text.toString()
             description = descriptionEditText.text.toString()
-            Log.d("xxx", "GetMy new task  deadline ${deadline} , task name${taskNameEditText.text} , assigneeId ${assignedToUserId} , priority${priority}")
-            if(deadline < 1  || taskNameEditText.text.isEmpty() || descriptionEditText.text.isEmpty() || assignedToUserId<1 || priority<1 || departmentId<1){
+            Log.d("xxx", "GetMy new task  deadline ${deadline} , task name${taskNameEditText.text} , assigneeId $assignedToUserId , priority${priority}")
+            if(deadline < 1  || taskNameEditText.text.isEmpty() || descriptionEditText.text.isEmpty() || assignedToUserId<1 || priority=="" || groupId<1L ){
 
-                Log.d("xxx", "GetMy new task  ${deadline}  ${taskNameEditText.text} ${assignedToUserId} ${priority}")
                 Toast.makeText(
                     this.requireContext(),
-                    "The users could not be loaded!",
+                    "Task data is missing!",
                     Toast.LENGTH_LONG
                 ).show()
             } else {
                 title= taskNameEditText.text.toString()
                 description = descriptionEditText.text.toString()
-                newTaskViewModel.createTask(NewTaskRequest(title,description,assignedToUserId,priority,deadline,departmentId,status))
+                newTaskViewModel.createTask(NewTaskRequest(title,description,assignedToUserId,groupId,priority,deadline,TaskStatus.NEW.toString()))
             }
         }
         newTaskViewModel.createTaskResult.observe(viewLifecycleOwner) {
@@ -110,6 +122,13 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 ).show()
                 taskNameEditText.setText("")
                 descriptionEditText.setText("")
+            }
+            else{
+                Toast.makeText(
+                    this.requireContext(),
+                    it.toString(),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
         callBackNewTaskButton.setOnClickListener {
@@ -124,13 +143,12 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     }
 
     @RequiresApi(Build.VERSION_CODES.N)
-    private fun setSpinners(view: View,) {
-        Log.d("xxx", "GetMy setSpiners ${users}")
-        val projectType = resources.getStringArray(R.array.ProjectType)
+    private fun setSpinners(view: View) {
+        val projectType = groups?.map{ it.groupName}
 
         // access the spinner
         val spinner = view.findViewById<Spinner>(R.id.projectSpinner)
-        if (spinner != null) {
+        if (spinner != null && projectType != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, projectType)
             spinner.adapter = adapter
 
@@ -138,16 +156,24 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-                    departmentId = position+1
+                    if(groups != null){
+                        groupId = groups!![position].groupId
+                    }
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
                     // write code to perform some action
                 }
             }
+        }else {
+            Toast.makeText(
+                this.requireContext(),
+                "The projects could not be loaded!",
+                Toast.LENGTH_LONG
+            ).show()
         }
 
-       val assignee = users?.map{ "${it.lastName} ${it.firstName}"}
+       val assignee = users?.map{ "${it.firstName} ${it.lastName}"}
         // access the spinner
         val assigneeSpinner = view.findViewById<Spinner>(R.id.assigneeSpinner)
         if (assigneeSpinner != null && assignee != null) {
@@ -158,11 +184,8 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-//                    Toast.makeText(this@MainActivity,
-//                        getString(R.string.selected_item) + " " +
-//                                "" + languages[position], Toast.LENGTH_SHORT).show()
                     if(users != null){
-                        assignedToUserId = users!!.get(position).id
+                        assignedToUserId = users!![position].id
                     }
                 }
 
@@ -189,7 +212,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-                    priority = position+1
+                    priority = TaskPriorities.values()[position].toString()
                 }
 
                 override fun onNothingSelected(parent: AdapterView<*>) {
@@ -211,7 +234,6 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     }
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
-        Log.e("Calendar"," $year $month $dayOfMonth")
         calendar.set(year,month,dayOfMonth)
         displayFormattedDate(calendar.timeInMillis)
         deadline = calendar.timeInMillis

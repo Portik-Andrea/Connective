@@ -8,8 +8,8 @@ data class NewTaskRequest(
     var title: String,
     var description: String,
     var assignedToUserId: Long,
-    var priority: Int,
+    var groupId: Long,
+    var priority: String,
     var deadline: Long,
-    var departmentId: Int,
-    var status: Int
+    var status: String
 )

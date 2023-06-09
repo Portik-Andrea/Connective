@@ -87,8 +87,8 @@ class MyProfileFragment : Fragment() {
             val user = myProfileViewModel.user.value
             Log.i("xxx","GetMy user "+ user.toString())
             if (user != null) {
-                userNameEditText.setText("${user.lastName} ${user.firstName}")
-                roleTypeTextView.text ="${user.departmentName}"
+                userNameEditText.setText(user.firstName+" "+user.lastName)
+                roleTypeTextView.text = user.departmentName
                 emailAddressTextView.text = user.email
                 if(user.imageUrl!= null){
                     var decodeBitmap = decodeBase64ToImage(user.imageUrl!!)

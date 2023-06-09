@@ -3,16 +3,12 @@ package ro.sapientia.Backend.controllers.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
-import java.io.Serializable;
+import ro.sapientia.Backend.domains.Status;
 
 @Data
 @NoArgsConstructor
-public class UpdateTaskDTO  implements Serializable {
-    @NotNull(message = "Task id is mandatory")
-    private Long taskId;
-
-    @NotNull(message = "Title is null")
+public class CreateTaskDTO {
+    @NotEmpty(message = "Title is mandatory")
     @Size(min=3, max = 100, message = "Title size must be between 3 and 100")
     private String title;
 
@@ -23,7 +19,7 @@ public class UpdateTaskDTO  implements Serializable {
     @NotNull(message = "Assigned to user id is mandatory")
     private Long assignedToUserId;
 
-    @NotNull(message = "Group id is mandatory")
+    @NotNull(message = "The group id is mandatory")
     private Long groupId;
 
     @NotEmpty(message = "Priority is mandatory")

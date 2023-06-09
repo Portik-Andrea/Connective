@@ -104,7 +104,7 @@ class TaskDescriptionFragment : Fragment() {
     private fun registerListeners() {
         Log.i("xxx", "Current Task $currentItem")
         titleTextView.text = currentItem.title
-        //setProjectType(currentItem.department_ID,projectTextView)
+        projectTextView.text = currentItem.groupName+" project"
         val createTime = convertLongToTime(currentItem.createdTime,"HH:mm MMMM dd yyyy")
         createdByUserTextView.text = "${currentItem.creatorUserName} $createTime"
         createTimeTextView.text = createTime
@@ -194,35 +194,26 @@ class TaskDescriptionFragment : Fragment() {
                             currentItem.assignedToUserId,
                             currentItem.priority,
                             currentItem.deadline,
-                            //currentItem.department_ID,
+                            currentItem.groupId,
                             TaskStatus.values()[position]
                         )
                         editTaskViewModel.updateTask(editTaskRequest)
                         Log.d("xxx", "GetMy edit task request")
                     }
                     editTaskViewModel.editTaskResult.observe(viewLifecycleOwner) {
-                        Log.d("xxx", "GetMy edit task result ")
-                        // Save data to preferences
-                        /*if( it == LoginResult.INVALID_CREDENTIALS){
+                        if(it == "Update is successful!"){
                             Toast.makeText(
                                 requireContext(),
-                                "Invalid credentials",
+                                "Update task status",
                                 Toast.LENGTH_SHORT
                             ).show()
-                            Log.d("xxx", "GetMy edit task request is Invalid credentials")
+                        } else{
+                            Toast.makeText(
+                                requireContext(),
+                                it.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
-                        if ( it == LoginResult.SUCCESS ) {
-                            Toast.makeText(
-                                requireContext(),
-                                "Task status updated",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }*/
-                        Toast.makeText(
-                            requireContext(),
-                            "Task status updated",
-                            Toast.LENGTH_SHORT
-                        ).show()
                     }
                 }
 

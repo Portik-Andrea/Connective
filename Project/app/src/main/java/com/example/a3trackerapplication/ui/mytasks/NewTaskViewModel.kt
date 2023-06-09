@@ -6,13 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
-import com.example.a3trackerapplication.models.LoginRequest
-import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.models.NewTaskRequest
 import com.example.a3trackerapplication.repositories.TaskRepository
-import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.ui.login.LoginViewModel
 import kotlinx.coroutines.launch
+import okhttp3.ResponseBody.Companion.toResponseBody
 
 
 class NewTaskViewModelFactory(
@@ -27,6 +24,7 @@ class NewTaskViewModelFactory(
 class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
 
     var createTaskResult: MutableLiveData<String> = MutableLiveData()
+    private var errorMessage: MutableLiveData<List<String>> = MutableLiveData()
 
     fun createTask(request: NewTaskRequest) {
         viewModelScope.launch {
@@ -36,13 +34,26 @@ class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
                     createTaskResult.value = "SUCCESS"
                     Log.d("xxx", "Login body" + response.body().toString())
                 } else {
-                    createTaskResult.value = "INVALID_CREDENTIALS"
-                    Log.i("xxx", "Login invalid credentials " + response?.errorBody().toString()  )
+                    val responseBody = response?.message();
+                    val extractedText: String? = extractTextFromResponse(responseBody.toString())
+                    createTaskResult.value = "INVALID CREDENTIALS"
+                    val errorBody:String = response?.errorBody()!!.string()
+                    val list: List<String> = errorBody.substring(1, errorBody.length - 1).split(", ")
+                    errorMessage.value = list
                 }
             } catch (e: Exception) {
-                createTaskResult.value = "UNKNOWN_ERROR"
-                Log.i("xxx","Login error" + e.toString())
+                createTaskResult.value = "UNKNOWN ERROR"
+                Log.i("xxx", "Login error $e")
             }
         }
+    }
+    private fun extractTextFromResponse(responseBody: String): String {
+        val startTag = "["
+        val endTag = "]"
+        val startIndex = responseBody.indexOf(startTag)
+        val endIndex = responseBody.indexOf(endTag)
+        return if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+            responseBody.substring(startIndex + startTag.length, endIndex)
+        } else "nem sikerult konvertalni"
     }
 }

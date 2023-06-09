@@ -30,6 +30,9 @@ public class Group {
 
     public Group() {
     }
+    public Group(String groupName) {
+        this.groupName = groupName;
+    }
 
     public Long getId() {
         return id;

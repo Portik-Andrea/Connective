@@ -23,7 +23,7 @@ class MyProfileViewModelFactory(
 }
 
 
-class MyProfileViewModel(val repository: UserRepository): ViewModel() {
+class MyProfileViewModel(private val repository: UserRepository): ViewModel() {
     var user = MutableLiveData<User>()
     var mentor = MutableLiveData<User>()
     var imageUri : Uri? = null

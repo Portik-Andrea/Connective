@@ -9,7 +9,7 @@ import java.util.List;
 
 @Repository
 public interface ITaskRepository extends JpaRepository<Task, Long> {
-    List<Task> findAllByAssignedToUser(Long assignedToUserId);
+    List<Task> findAllByAssignedToUserId(Long assignedToUserId);
 
     List<Task> findAll();
 

@@ -13,7 +13,7 @@ import com.example.a3trackerapplication.R
 
 class SettingsFragment : Fragment() {
     private lateinit var viewProfileTextView:TextView
-    private lateinit var logoutButtom: Button
+    private lateinit var logoutButton: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,14 +37,14 @@ class SettingsFragment : Fragment() {
 
     private fun initViewItems(view: View){
         viewProfileTextView = view.findViewById(R.id.viewProfileTextView)
-        logoutButtom = view.findViewById(R.id.logoutButton)
+        logoutButton = view.findViewById(R.id.logoutButton)
     }
 
     private fun registerListeners(){
         viewProfileTextView.setOnClickListener {
             findNavController().navigate(R.id.action_settingsFragment_to_myProfileFragment)
         }
-        logoutButtom.setOnClickListener {
+        logoutButton.setOnClickListener {
             val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
             val editor = preferences.edit()
             editor.clear()

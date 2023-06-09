@@ -19,43 +19,24 @@ class LoginViewModelFactory(
     }
 }
 
-class LoginViewModel(val repository: UserRepository) : ViewModel() {
+class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
     var loginResult: MutableLiveData<LoginResult> = MutableLiveData()
 
-    fun test(){
-        viewModelScope.launch {
-            try {
-                val response = repository.test();
-                if (response?.isSuccessful == true) {
-                    Log.i("xxx", "Login body" + response.body().toString())
-                } else {
-                    Log.i("xxx", "Login invalid credentials " + (response.toString()))
-                }
-            } catch (e: Exception) {
-                Log.i("xxx","Login error" + e.toString())
-            }
-        }
-    }
 
     fun login(request: LoginRequest) {
         viewModelScope.launch {
             try {
                 val response = repository.login(request)
-                if (response?.isSuccessful == true) {
-
-                    MyApplication.token = response?.body()!!.token
-                    //MyApplication.deadline = response.body()!!.deadline
-
+                if (response.isSuccessful) {
+                    MyApplication.token = response.body()!!.token
+                    MyApplication.userType = response.body()!!.userType
                     loginResult.value = LoginResult.SUCCESS
-                    Log.i("xxx", "Login body" + response.body().toString())
                 } else {
                     loginResult.value = LoginResult.INVALID_CREDENTIALS
-                    Log.i("xxx", "Login invalid credentials $response")
                 }
             } catch (e: Exception) {
                 loginResult.value = LoginResult.UNKNOWN_ERROR
-                Log.i("xxx", "Login error $e")
             }
         }
     }

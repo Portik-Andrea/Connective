@@ -10,38 +10,41 @@ import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface TrackerApi {
-    @GET("public/test")
-    suspend fun test(): Response<String>
-
     @POST(Constants.LOGIN_URL)
     suspend fun login(@Body request: LoginRequest): Response<LoginResponse>
 
     @GET("users/getAllUsers")
     suspend fun getUsers(@Header("token") token: String): Response<List<User>>
 
-    @GET("users/myuser")
+    @GET("users/myUser")
     suspend fun getMyUser(@Header("token") token: String): Response<User>
 
-    @POST("users/updateuser")
+    @POST("users/updateUser")
     suspend fun updateUser(@Header("token") token: String,@Body request: UpdateUserRequest): Response<Boolean>
 
     @GET("users/mentors")
     suspend fun getAllMentor(@Header("token") token: String): Response<List<User>>
 
-    @GET("users/selectmentor/{mentorId}")
+    @GET("users/selectMentor/{mentorId}")
     suspend fun getSelectMentor(@Header("token") token: String,@Path("mentorId") mentorId : Long): Response<User>
 
     @GET("tasks/allTasks")
     suspend fun getAllTasks(@Header("token") token: String): Response<List<Task>>
 
-    @POST("/task/create")
+    @GET("tasks/myTasks")
+    suspend fun getMyTasks(@Header("token") token: String): Response<List<Task>>
+
+    @POST("tasks/createTask")
     suspend fun createTask(@Header("token") token: String, @Body request: NewTaskRequest): Response<String>
 
-    @POST("/task/update")
+    @POST("tasks/updateTask")
     suspend fun updateTask(@Header("token") token: String, @Body request: EditTaskRequest): Response<String>
 
     @GET("tasks/getTask/{taskId}")
     suspend fun getTask(@Header("token") token: String,@Path("taskId") taskId : Long): Response<Task>
+
+    @GET("groups/getGroups")
+    suspend fun getGroups(@Header("token") token: String): Response<List<Group>>
 
     companion object {
         fun getApi(): TrackerApi? {

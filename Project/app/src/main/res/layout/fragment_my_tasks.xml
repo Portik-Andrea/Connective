@@ -27,6 +27,7 @@
         android:layout_height="50dp"
         android:layout_marginBottom="2dp"
         android:background="@color/blue"
+        android:visibility="invisible"
         android:src="@drawable/ic_baseline_add_circle_24"
         app:layout_constraintBottom_toTopOf="@+id/titleView"
         app:layout_constraintEnd_toEndOf="parent"

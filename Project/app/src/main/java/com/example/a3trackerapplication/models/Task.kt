@@ -14,7 +14,8 @@ data class Task(
     var createdTime: Long,
     var priority: TaskPriorities,
     var deadline: Long,
-    //var projectId: Long,
+    var groupId: Long,
+    var groupName: String,
     var status: TaskStatus,
     var progress: Int
 )

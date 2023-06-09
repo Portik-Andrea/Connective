@@ -1,5 +1,6 @@
 package ro.sapientia.Backend.services;
 
+import ro.sapientia.Backend.controllers.dto.CreateTaskDTO;
 import ro.sapientia.Backend.controllers.dto.TaskDTO;
 import ro.sapientia.Backend.controllers.dto.UpdateTaskDTO;
 import ro.sapientia.Backend.domains.Task;
@@ -14,4 +15,6 @@ public interface ITaskService {
     Task findById(Long id);
 
     boolean updateTask(UpdateTaskDTO updateTaskDTO);
+
+    boolean createTask(CreateTaskDTO createTaskDTO,Long creatorUserId);
 }

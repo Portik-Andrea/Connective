@@ -9,6 +9,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import ro.sapientia.Backend.domains.*;
 import ro.sapientia.Backend.repositories.IDepartmentRepository;
+import ro.sapientia.Backend.repositories.IGroupRepository;
 import ro.sapientia.Backend.repositories.ITaskRepository;
 import ro.sapientia.Backend.repositories.IUserRepository;
 
@@ -26,15 +27,33 @@ public class BackendApplication {
 	public CommandLineRunner demo_repository1(IDepartmentRepository repository) {
 		return (args) -> {
 			if(repository.count() == 0){
-				repository.save(new Department("HR"));
-				repository.save(new Department("Developer"));
-
+				repository.save(new Department("Frontend developer"));
+				repository.save(new Department("Backend developer"));
+				repository.save(new Department("Project manager"));
+				repository.save(new Department("DevOps"));
+				repository.save(new Department("UX Designer"));
+				repository.save(new Department("Business analyst"));
 			}
 
 		};
 	}
 
 	@Bean
+	public CommandLineRunner demo_repository2(IGroupRepository repository) {
+		return (args) -> {
+			if(repository.count() == 0){
+				repository.save(new Group("Applied Linguistics"));
+				repository.save(new Group("Applied Social Sciences"));
+				repository.save(new Group("Mechanical Engineering"));
+				repository.save(new Group("Horticulture"));
+				repository.save(new Group("Mathematics-Informatics"));
+				repository.save(new Group("Electrical Engineering"));
+			}
+		};
+	}
+
+
+	/*@Bean
 	public CommandLineRunner demo_repository2(IUserRepository repository, IDepartmentRepository departmentRepository) {
 		return (args) -> {
 			if( repository.count() == 0 ) {
@@ -103,7 +122,7 @@ public class BackendApplication {
 				}
 			}
 		};
-	}
+	}*/
 
 	@Bean
 	public PasswordEncoder passwordEncoder() {

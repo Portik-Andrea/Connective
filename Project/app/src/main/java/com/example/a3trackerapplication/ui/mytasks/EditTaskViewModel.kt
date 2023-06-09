@@ -21,21 +21,25 @@ class EditTaskViewModelFactory(
 }
 class EditTaskViewModel(private val repository: TaskRepository) : ViewModel() {
     var selectTask: MutableLiveData<Task> = MutableLiveData()
-    var editTaskResult: MutableLiveData<LoginResult> = MutableLiveData()
+    var editTaskResult: MutableLiveData<String> = MutableLiveData()
+    private var errorMessage: MutableLiveData<List<String>> = MutableLiveData()
     fun updateTask(request: EditTaskRequest) {
         viewModelScope.launch {
             try {
                 val response = repository.updateTask(MyApplication.token,request)
                 if (response?.isSuccessful == true) {
-                    editTaskResult.value = LoginResult.SUCCESS
-                    Log.d("xxx", "Login body" + response.body().toString())
-                } else {
-                    editTaskResult.value = LoginResult.INVALID_CREDENTIALS
-                    Log.i("xxx", "Login invalid credentials " + response?.errorBody().toString()  )
+                    editTaskResult.value = response.body()
+                } else if(response?.code() == 400){
+                    editTaskResult.value = "INVALID CREDENTIALS"
+                    val errorBody:String = response.errorBody()!!.string()
+                    val list: List<String> = errorBody.substring(1, errorBody.length - 1).split(", ")
+                    errorMessage.value = list
+                }
+                else {
+                    editTaskResult.value = "OTHER ERROR"
                 }
             } catch (e: Exception) {
-                editTaskResult.value = LoginResult.UNKNOWN_ERROR
-                Log.i("xxx", "Login error $e")
+                editTaskResult.value = e.message
             }
         }
     }
@@ -46,13 +50,8 @@ class EditTaskViewModel(private val repository: TaskRepository) : ViewModel() {
                 val response = repository.getTask(MyApplication.token,taskId)
                 if (response?.isSuccessful == true) {
                     selectTask.value = response.body()
-                    Log.d("xxx", "GetTask body " + response.body().toString())
-                } else {
-                    Log.i("xxx", "GetTask response error " + response?.errorBody().toString()  )
                 }
-            } catch (e: Exception) {
-                Log.i("xxx", "GetTask error $e")
-            }
+            } catch (e: Exception) { }
         }
     }
 

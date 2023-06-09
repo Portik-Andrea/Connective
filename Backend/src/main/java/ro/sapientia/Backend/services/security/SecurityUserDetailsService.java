@@ -63,6 +63,7 @@ public class SecurityUserDetailsService implements UserDetailsService {
         if (department.isEmpty()){
             throw new DepartmentNotFoundException(registerRequest.getDepartmentId());
         }
+        user.setDepartment(department.get());
         user.setPassword( passwordEncoder.encode(registerRequest.getPassword()) );
         //user.getRoles().add( roleRepository.findByName(ROLE_USER).orElseThrow() );
         IUserRepository.save( user );
@@ -78,10 +79,17 @@ public class SecurityUserDetailsService implements UserDetailsService {
     }
 
     public Long sendUserId(String token){
+        return getUser(token).getId();
+    }
+    public String sendUsertype(String token){
+        return  getUser(token).getType().toString();
+    }
+
+    private UserEntity getUser(String token){
         Optional<UserEntity> user = IUserRepository.findByToken(token);
         if( !user.isPresent() ){
             throw new UsernameNotFoundException(token);
         }
-        return user.get().getId();
+        return user.get();
     }
 }

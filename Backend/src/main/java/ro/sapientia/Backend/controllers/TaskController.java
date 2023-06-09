@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ro.sapientia.Backend.controllers.dto.CreateTaskDTO;
 import ro.sapientia.Backend.controllers.dto.TaskDTO;
 import ro.sapientia.Backend.controllers.dto.UpdateTaskDTO;
 import ro.sapientia.Backend.controllers.mapper.TaskMapper;
@@ -55,6 +56,7 @@ public class TaskController {
         tasks.forEach(task -> tasksDTO.add(TaskMapper.convertModelToDTO(task)));
         return tasksDTO;
     }
+
     @GetMapping("/getTask/{taskId}")
     public TaskDTO getTask(@PathVariable("taskId") Long taskId){
         Task task = taskService.findById(taskId);
@@ -64,8 +66,28 @@ public class TaskController {
     @PostMapping("/updateTask")
     public ResponseEntity<String> updateTask(@RequestBody @Valid UpdateTaskDTO updateTaskDTO){
         boolean result = taskService.updateTask(updateTaskDTO);
-        return ResponseEntity.ok("Sikeres mentes " + result);
+        if(result){
+            return ResponseEntity.ok("Update is successful!");
+        }
+        return ResponseEntity.ok("Update is unsuccessful!");
 
     }
 
+    @PostMapping("/createTask")
+    public ResponseEntity<String> createTask(@RequestBody @Valid CreateTaskDTO createTaskDTO,HttpServletRequest request){
+        String token = request.getHeader("Authorization");
+        if (token != null && token.startsWith("Bearer ")) {
+            token = token.substring(7);
+            Long id = userDetailsService.sendUserId(token);
+            boolean result = taskService.createTask(createTaskDTO,id);
+            if(result){
+                return ResponseEntity.ok("Task creation is successful");
+            }
+            return ResponseEntity.ok("Task creation is unsuccessful!");
+        }
+        else {
+            throw new IllegalArgumentException("Invalid token");
+        }
+
+    }
 }

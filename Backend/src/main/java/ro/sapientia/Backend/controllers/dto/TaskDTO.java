@@ -9,9 +9,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import ro.sapientia.Backend.domains.Priority;
 import ro.sapientia.Backend.domains.Status;
-import ro.sapientia.Backend.domains.UserEntity;
-
-import java.util.Date;
 
 @Data
 @NoArgsConstructor
@@ -30,6 +27,9 @@ public class TaskDTO {
     private String creatorUserName;
     @NotEmpty(message = "The created time is mandatory")
     private Long createdTime;
+    @NotEmpty(message = "Group is mandatory")
+    private Long groupId;
+    private String groupName;
     private String priority;
     private Long deadline;
     private Status status;

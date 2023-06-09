@@ -36,6 +36,9 @@ public class Task {
     //@NotEmpty(message = "The created time is mandatory")
     private Date createdTime;
 
+    @OneToOne
+    private Group group;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "priority")
     private Priority priority;
@@ -126,6 +129,13 @@ public class Task {
 
     public void setCreatedTime(Date createdTime) {
         this.createdTime = createdTime;
+    }
+    public Group getGroup() {
+        return group;
+    }
+
+    public void setGroup(Group group) {
+        this.group = group;
     }
 
     public Priority getPriority() {

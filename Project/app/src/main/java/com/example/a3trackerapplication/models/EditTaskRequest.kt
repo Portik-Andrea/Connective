@@ -10,6 +10,6 @@ data class EditTaskRequest (
     var assignedToUserId: Long,
     var priority: TaskPriorities,
     var deadline: Long,
-    //var departmentId: Int,
+    var groupId: Long,
     var status: TaskStatus
 )

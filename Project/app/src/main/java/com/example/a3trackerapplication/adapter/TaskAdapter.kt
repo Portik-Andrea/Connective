@@ -82,7 +82,7 @@ class TaskAdapter(
         ++bindCounter
         Log.i("XXX", "onBindViewHolder $bindCounter")
         val currentItem = list[position]
-        //setProjectType(currentItem.department_ID,holder.projectTextView)
+        holder.projectTextView.text = currentItem.groupName+" project"
         holder.titleTextView.text = currentItem.title
         holder.createdByUserTextView.text = currentItem.creatorUserName
         holder.createTimeTextView.text = convertLongToTime(currentItem.createdTime,"HH:mm a")
@@ -165,9 +165,6 @@ class TaskAdapter(
             TaskPriorities.LOW -> {
                 textView.text="Low prio"
                 textView.setTextColor(Color.parseColor("#3BB143"))
-            }
-            else -> {
-                textView.text=""
             }
         }
     }

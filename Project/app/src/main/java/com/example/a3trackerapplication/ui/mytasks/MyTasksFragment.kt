@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.adapter.OnTaskClickListener
 import com.example.a3trackerapplication.adapter.TaskAdapter
@@ -60,6 +61,10 @@ class MyTasksFragment : Fragment() , OnTaskClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
+            addNewTaskButton = requireView().findViewById(R.id.addNewTaskButton)
+            if(MyApplication.userType =="MENTOR"){
+                addNewTaskButton.visibility = View.VISIBLE
+            }
             myTasksViewModel.getTasks()
             myTasksViewModel.myTasks.observe(viewLifecycleOwner) {
                 list = myTasksViewModel.myTasks.value!!
@@ -109,8 +114,6 @@ class MyTasksFragment : Fragment() , OnTaskClickListener {
 
 
     private fun registerListeners() {
-        addNewTaskButton = requireView().findViewById(R.id.addNewTaskButton)
-
         addNewTaskButton.setOnClickListener{
             findNavController().navigate(R.id.action_myTasksFragment_to_newTaskFragment)
         }

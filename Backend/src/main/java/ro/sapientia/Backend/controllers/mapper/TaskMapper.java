@@ -18,6 +18,8 @@ public class TaskMapper {
         taskDTO.setCreatorUserId(task.getCreatorUser().getId());
         taskDTO.setCreatorUserName(task.getCreatorUser().getFirstName() + " " + task.getCreatorUser().getLastName());
         taskDTO.setCreatedTime(task.getCreatedTime().getTime());
+        taskDTO.setGroupId(task.getGroup().getId());
+        taskDTO.setGroupName(task.getGroup().getGroupName());
         taskDTO.setPriority(task.getPriority().toString());
         taskDTO.setDeadline(task.getDeadline().getTime());
         taskDTO.setStatus(task.getStatus());

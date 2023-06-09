@@ -40,7 +40,7 @@ public class UserController {
         }
         return UserMapper.convertModelToDTO(user);
     }
-    @GetMapping("/myuser")
+    @GetMapping("/myUser")
     public UserDTO getUser(HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
@@ -64,7 +64,7 @@ public class UserController {
         users.forEach(user -> userDTOS.add(UserMapper.convertModelToDTO(user)));
         return userDTOS;
     }
-    @PostMapping("/updateuser")
+    @PostMapping("/updateUser")
     public ResponseEntity<Boolean> updateUser(@RequestBody UpdateUserDTO updateUserDTO,HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {
@@ -95,7 +95,7 @@ public class UserController {
         return mentorsDTO;
     }
 
-    @GetMapping("/selectmentor/{mentorId}")
+    @GetMapping("/selectMentor/{mentorId}")
     public UserDTO selectMentor(@PathVariable("mentorId") Long mentorId, HttpServletRequest request){
         String token = request.getHeader("Authorization");
         if (token != null && token.startsWith("Bearer ")) {

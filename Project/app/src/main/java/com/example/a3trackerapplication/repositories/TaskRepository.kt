@@ -11,6 +11,9 @@ class TaskRepository {
     suspend fun getAllTasks(token: String): Response<List<Task>>? {
         return TrackerApi.getApi()?.getAllTasks(token = token);
     }
+    suspend fun getMyTasks(token: String): Response<List<Task>>? {
+        return TrackerApi.getApi()?.getMyTasks(token = token);
+    }
 
     suspend fun createTask(token: String,request: NewTaskRequest): Response<String>? {
         return TrackerApi.getApi()?.createTask(token = token,request=request);

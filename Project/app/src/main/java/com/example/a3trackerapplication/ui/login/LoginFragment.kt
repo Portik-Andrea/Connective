@@ -64,7 +64,7 @@ class LoginFragment : Fragment() {
             }
         }
         testButton.setOnClickListener {
-            loginViewModel.test()
+
         }
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {

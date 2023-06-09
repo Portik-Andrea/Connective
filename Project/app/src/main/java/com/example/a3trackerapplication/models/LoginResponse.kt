@@ -5,8 +5,8 @@ import com.squareup.moshi.JsonClass
 
 //@JsonClass(generateAdapter = true)
 data class LoginResponse (
-    @SerializedName("userId")
-    var userId: Int,
     @SerializedName("token")
-    var token: String
+    var token: String,
+    @SerializedName("type")
+    var userType: String
 )

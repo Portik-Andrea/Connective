@@ -61,15 +61,24 @@ public class NotFoundAdvice{
         return ex.getMessage();
     }
 
+    @ResponseBody
+    @ExceptionHandler(GroupNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public String groupNotFoundHandler(GroupNotFoundException ex){
+        return ex.getMessage();
+    }
+
+    @ResponseBody
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleMethodArgumentNotValid(MethodArgumentNotValidException ex){
+    @ResponseStatus(BAD_REQUEST)
+    public String handleMethodArgumentNotValid(MethodArgumentNotValidException ex){
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getAllErrors().forEach((error) ->{
             String fieldName = ((FieldError) error).getField();
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        ResponseEntity<String> response = new ResponseEntity<>(errors.toString(),HttpStatus.BAD_REQUEST);
-        return response;
+        //ResponseEntity<String> response = new ResponseEntity<>(errors.values().toString(),HttpStatus.BAD_REQUEST);
+        return errors.values().toString();
     }
 }

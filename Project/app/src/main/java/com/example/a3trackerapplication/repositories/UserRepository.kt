@@ -5,9 +5,6 @@ import com.example.a3trackerapplication.models.*
 import retrofit2.Response
 
 class UserRepository {
-    suspend fun test(): Response<String>? {
-        return TrackerApi.getApi()?.test();
-    }
     suspend fun login(request: LoginRequest): Response<LoginResponse> {
         return TrackerApi.getApi()!!.login(request = request);
     }

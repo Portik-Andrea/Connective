@@ -46,6 +46,15 @@ interface TrackerApi {
     @GET("groups/getGroups")
     suspend fun getGroups(@Header("token") token: String): Response<List<Group>>
 
+    @GET("groups/myGroups")
+    suspend fun getMyGroups(@Header("token") token: String): Response<List<Group>>
+
+    @GET("groups/{groupId}")
+    suspend fun getGroupMembers(@Header("token") token: String,@Path("groupId") groupId : Long): Response<List<User>>
+
+    @POST("groups/addNewMember")
+    suspend fun addNewMember(@Header("token") token: String, @Body request: AddMember): Response<String>
+
     companion object {
         fun getApi(): TrackerApi? {
             return RetrofitInstance.client?.create(TrackerApi::class.java)

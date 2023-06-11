@@ -17,6 +17,10 @@
     <string name="task_description_title">Task Description</string>
     <string name="back">Back</string>
     <string name="edit_task_button_content">Edit task</string>
+    <string name="your_groups">Your groups:</string>
+    <string name="members">Members</string>
+    <string name="all_members">All members:</string>
+    <string name="add_new_member">Add new member</string>
     <string-array name="tasks_type">
         <item>Recently Added</item>
         <item>Active tasks</item>

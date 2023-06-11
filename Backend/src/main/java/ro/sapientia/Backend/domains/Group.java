@@ -25,8 +25,6 @@ public class Group {
     )
     private Set<UserEntity> members = new HashSet<>();
 
-    @OneToMany(mappedBy = "group")
-    private Set<GroupInformation> information = new HashSet<>();
 
     public Group() {
     }
@@ -58,19 +56,9 @@ public class Group {
         this.members = members;
     }
 
-    public Set<GroupInformation> getInformation() {
-        return information;
-    }
 
-    public void setInformation(Set<GroupInformation> information) {
-        this.information = information;
-    }
-
-    public void addInformation(GroupInformation groupInformation){
-        boolean result = this.information.add(groupInformation);
-        if(result){
-            this.members.add(groupInformation.getUser());
-            groupInformation.getUser().addGroup(this);
-        }
+    public void addMember(UserEntity user){
+        this.members.add(user);
+        user.addGroup(this);
     }
 }

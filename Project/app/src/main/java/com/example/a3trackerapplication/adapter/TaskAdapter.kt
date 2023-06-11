@@ -13,6 +13,7 @@ import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.TaskPriorities
 import com.example.a3trackerapplication.models.TaskStatus
+import com.example.a3trackerapplication.ui.mytasks.MyTasksFragment
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,7 +25,7 @@ interface OnTaskClickListener{
 
 class TaskAdapter(
     private val list: List<Task>,
-    private val listener: OnTaskClickListener
+    private val listener: MyTasksFragment
 ):  RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
     //var clickListener: ClickListener? = null
 

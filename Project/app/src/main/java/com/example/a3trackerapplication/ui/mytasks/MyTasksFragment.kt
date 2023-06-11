@@ -21,9 +21,6 @@ import com.example.a3trackerapplication.adapter.TaskAdapter
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.User
 import com.example.a3trackerapplication.repositories.TaskRepository
-import com.example.a3trackerapplication.repositories.UserRepository
-import com.example.a3trackerapplication.util.UserListViewModel
-import com.example.a3trackerapplication.util.UserListViewModelFactory
 
 class MyTasksFragment : Fragment() , OnTaskClickListener {
     private lateinit var editTaskViewModel: EditTaskViewModel

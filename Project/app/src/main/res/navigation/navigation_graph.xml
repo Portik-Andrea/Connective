@@ -23,7 +23,11 @@
         android:id="@+id/myGroupsFragment"
         android:name="com.example.a3trackerapplication.ui.mygroups.MyGroupsFragment"
         android:label="fragment_my_groups"
-        tools:layout="@layout/fragment_my_groups" />
+        tools:layout="@layout/fragment_my_groups" >
+        <action
+            android:id="@+id/action_myGroupsFragment_to_groupMembersFragment"
+            app:destination="@id/groupMembersFragment" />
+    </fragment>
     <fragment
         android:id="@+id/settingsFragment"
         android:name="com.example.a3trackerapplication.ui.settings.SettingsFragment"
@@ -97,5 +101,26 @@
         <action
             android:id="@+id/action_selectMentorFragment_to_myProfileFragment"
             app:destination="@id/myProfileFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/groupMembersFragment"
+        android:name="com.example.a3trackerapplication.ui.mygroups.GroupMembersFragment"
+        android:label="fragment_group_members"
+        tools:layout="@layout/fragment_group_members" >
+        <action
+            android:id="@+id/action_groupMembersFragment_to_myGroupsFragment"
+            app:destination="@id/myGroupsFragment" />
+        <action
+            android:id="@+id/action_groupMembersFragment_to_addNewMemberFragment"
+            app:destination="@id/addNewMemberFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/addNewMemberFragment"
+        android:name="com.example.a3trackerapplication.ui.mygroups.AddNewMemberFragment"
+        android:label="fragment_add_new_member"
+        tools:layout="@layout/fragment_add_new_member" >
+        <action
+            android:id="@+id/action_addNewMemberFragment_to_groupMembersFragment"
+            app:destination="@id/groupMembersFragment" />
     </fragment>
 </navigation>

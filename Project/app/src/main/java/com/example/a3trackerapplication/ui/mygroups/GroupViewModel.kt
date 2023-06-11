@@ -8,6 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.models.Group
 import com.example.a3trackerapplication.models.Task
+import com.example.a3trackerapplication.models.UserType
 import com.example.a3trackerapplication.repositories.GroupRepository
 import com.example.a3trackerapplication.repositories.TaskRepository
 import com.example.a3trackerapplication.ui.mytasks.EditTaskViewModel
@@ -27,7 +28,11 @@ class GroupViewModel (private val repository: GroupRepository) : ViewModel() {
     fun getGroups() {
         viewModelScope.launch {
             try {
-                val response = repository.getGroups(MyApplication.token)
+                val response = if(MyApplication.userType==UserType.MENTEE.toString()){
+                                    repository.getMyGroups(MyApplication.token)
+                               } else{
+                                    repository.getGroups(MyApplication.token)
+                               }
                 if(response?.isSuccessful == true) {
                     groups.value = response.body()
                     Log.d("xxx", "GetGroups response ${response.body()}")

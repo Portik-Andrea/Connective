@@ -57,9 +57,6 @@ public class UserEntity {
     @ManyToMany(mappedBy = "members")
     private Set<Group> groups = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
-    private Set<GroupInformation> information = new HashSet<>();
-
     @Column
     @ToString.Exclude
     @NotEmpty(message = "password is mandatory")
@@ -184,14 +181,6 @@ public class UserEntity {
         this.groups = groups;
     }
 
-    public Set<GroupInformation> getInformation() {
-        return information;
-    }
-
-    public void setInformation(Set<GroupInformation> information) {
-        this.information = information;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -218,10 +207,6 @@ public class UserEntity {
 
     public void addGroup(Group group){
         groups.add(group);
-    }
-
-    public void addGroupInformation(GroupInformation groupInformation){
-        boolean result = information.add(groupInformation);
     }
 
     public void updateMentor(UserEntity mentor){

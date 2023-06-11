@@ -2,9 +2,7 @@ package ro.sapientia.Backend.services.impl;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.client.HttpClientErrorException;
 import ro.sapientia.Backend.controllers.dto.CreateTaskDTO;
-import ro.sapientia.Backend.controllers.dto.TaskDTO;
 import ro.sapientia.Backend.controllers.dto.UpdateTaskDTO;
 import ro.sapientia.Backend.domains.*;
 import ro.sapientia.Backend.repositories.ITaskRepository;
@@ -12,11 +10,9 @@ import ro.sapientia.Backend.services.IGroupService;
 import ro.sapientia.Backend.services.ITaskService;
 import ro.sapientia.Backend.services.IUserService;
 import ro.sapientia.Backend.services.exceptions.GroupNotFoundException;
-import ro.sapientia.Backend.services.exceptions.IllegalUserTypeException;
 import ro.sapientia.Backend.services.exceptions.TaskNotFoundException;
 import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 
-import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -25,11 +21,11 @@ import java.util.Optional;
 @Transactional(readOnly = true)
 public class TaskService implements ITaskService {
 
-    private ITaskRepository taskRepository;
+    private final ITaskRepository taskRepository;
 
-    private IUserService userService;
+    private final IUserService userService;
 
-    private IGroupService groupService;
+    private final IGroupService groupService;
 
     public TaskService(ITaskRepository taskRepository, UserService userService, GroupService groupService){
         this.taskRepository = taskRepository;
@@ -39,8 +35,7 @@ public class TaskService implements ITaskService {
     @Override
     public List<Task> findAllByAssigneeUser(Long userId) {
         if(userService.findUserByID(userId)!= null){
-            List<Task> userTasks = taskRepository.findAllByAssignedToUserId(userId);
-            return userTasks;
+            return taskRepository.findAllByAssignedToUserId(userId);
         }
         else{
             throw new UserNotFoundException(userId);
@@ -49,8 +44,7 @@ public class TaskService implements ITaskService {
 
     @Override
     public List<Task> findAll() {
-        List<Task> tasks = taskRepository.findAll();
-        return tasks;
+        return taskRepository.findAll();
     }
 
     @Override

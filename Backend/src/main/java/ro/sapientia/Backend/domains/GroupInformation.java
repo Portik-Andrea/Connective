@@ -3,6 +3,7 @@ package ro.sapientia.Backend.domains;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.Objects;
 
 @Entity
@@ -10,6 +11,8 @@ import java.util.Objects;
 public class GroupInformation  {
     @Id
     @Column(name = "id")
+    @SequenceGenerator(name = "group_inf_id_gen", sequenceName = "group_inf_id_seq", initialValue = 1)
+    @GeneratedValue(generator = "group_inf_id_gen")
     private Long groupInformationId;
 
     @ManyToOne
@@ -21,7 +24,7 @@ public class GroupInformation  {
     private Group group;
 
     @Column(name = "joining_date")
-    private LocalDate joiningDate;
+    private Date joiningDate;
 
     @ManyToOne()
     @JoinColumn(name = "inviting_user_id")
@@ -44,7 +47,6 @@ public class GroupInformation  {
 
     public void setUser(UserEntity user) {
         this.user = user;
-        user.addGroupInformation(this);
     }
 
     public Group getGroup() {
@@ -53,23 +55,23 @@ public class GroupInformation  {
 
     public void setGroup(Group group) {
         this.group = group;
-        group.addInformation(this);
+        group.addMember(this.user);
     }
 
-    public LocalDate getJoiningDate() {
+    public Date getJoiningDate() {
         return joiningDate;
     }
 
-    public void setJoiningDate(LocalDate joiningDate) {
+    public void setJoiningDate(Date joiningDate) {
         this.joiningDate = joiningDate;
     }
 
-    public UserEntity getAdderUserId() {
+    public UserEntity getInvitingUser() {
         return invitingUser;
     }
 
-    public void setAdderUserId(UserEntity adderUser) {
-        this.invitingUser = adderUser;
+    public void setInvitingUser(UserEntity invitingUser) {
+        this.invitingUser = invitingUser;
     }
 
     @Override

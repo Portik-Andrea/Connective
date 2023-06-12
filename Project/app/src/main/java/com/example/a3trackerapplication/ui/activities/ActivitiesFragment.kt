@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,8 @@ class ActivitiesFragment : Fragment() {
     private lateinit var myTasksViewModel: MyTasksViewModel
     private lateinit var groupViewModel: GroupViewModel
     private lateinit var activitiesViewModel: ActivitiesViewModel
+
+    private lateinit var progressBar: ProgressBar
 
     private val dataAdapter: ActivityAdapter by lazy {
         ActivityAdapter()
@@ -82,22 +85,16 @@ class ActivitiesFragment : Fragment() {
             }*/
 
         }*/
+        progressBar = view.findViewById(R.id.progressBar)
+        progressBar.visibility = View.VISIBLE
         myTasksViewModel.getTaskActivities()
         myTasksViewModel.tasks.observe(viewLifecycleOwner){
-            val tasks = myTasksViewModel.tasks.value
-
+            val tasks = myTasksViewModel.tasks.value!!.sortedBy { it.createdTime }.reversed()
             groupViewModel.getGroupActivities()
             groupViewModel.groups.observe(viewLifecycleOwner){
-                val groups = groupViewModel.groups.value
+                val groups = groupViewModel.groups.value!!.sortedBy { it.joiningDate }.reversed()
+                progressBar.visibility = View.INVISIBLE
                 val list: List<ActivityModel> = concatenate(tasks!!,groups!!)
-
-                //list.plus(tasks)
-                //list.plus(groups)
-                //list.plus(users)
-                Log.d("xxx", "GetActivities list: $list")
-                //Log.d("xxx", "GetActivities users: $users")
-                //Log.d("xxx", "GetActivities tasks: $tasks")
-                //Log.d("xxx", "GetActivities groups: $groups")
                 dataAdapter.setData(list)
 
                 view.findViewById<RecyclerView>(R.id.activitiesRecyclerView)

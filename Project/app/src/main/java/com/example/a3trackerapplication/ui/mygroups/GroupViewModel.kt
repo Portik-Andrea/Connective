@@ -6,12 +6,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.a3trackerapplication.MyApplication
+import com.example.a3trackerapplication.models.ActivityModel
 import com.example.a3trackerapplication.models.Group
-import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.UserType
 import com.example.a3trackerapplication.repositories.GroupRepository
-import com.example.a3trackerapplication.repositories.TaskRepository
-import com.example.a3trackerapplication.ui.mytasks.EditTaskViewModel
 import kotlinx.coroutines.launch
 
 class GroupViewModelFactory(
@@ -23,8 +21,8 @@ class GroupViewModelFactory(
 }
 
 class GroupViewModel (private val repository: GroupRepository) : ViewModel() {
-    var groups = MutableLiveData<List<Group>>()
-
+    var myGroups = MutableLiveData<List<Group>>()
+    var groups = MutableLiveData<List<ActivityModel.GroupData>>()
     fun getGroups() {
         viewModelScope.launch {
             try {
@@ -34,15 +32,27 @@ class GroupViewModel (private val repository: GroupRepository) : ViewModel() {
                                     repository.getGroups(MyApplication.token)
                                }
                 if(response?.isSuccessful == true) {
-                    groups.value = response.body()
-                    Log.d("xxx", "GetGroups response ${response.body()}")
+                    myGroups.value = response.body()
                 } else{
                     if (response != null) {
-                        Log.i("xxx-uvm", response.message())
                     }
                 }
             } catch (e: Exception) {
-                Log.i("xxx", e.toString())
+            }
+        }
+    }
+
+    fun getGroupActivities() {
+        viewModelScope.launch {
+            try {
+                val response = repository.getGroupActivities(MyApplication.token)
+                if(response?.isSuccessful == true) {
+                    groups.value = response.body()
+                } else{
+                    if (response != null) {
+                    }
+                }
+            } catch (e: Exception) {
             }
         }
     }

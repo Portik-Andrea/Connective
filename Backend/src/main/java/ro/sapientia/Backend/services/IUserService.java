@@ -21,4 +21,6 @@ public interface IUserService {
     List<UserEntity> findAllUsers();
 
     void refreshUser(UserEntity user);
+
+    List<UserEntity> findUsers();
 }

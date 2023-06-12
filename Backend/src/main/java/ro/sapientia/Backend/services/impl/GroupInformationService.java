@@ -13,6 +13,7 @@ import ro.sapientia.Backend.services.IGroupService;
 import ro.sapientia.Backend.services.IUserService;
 
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
@@ -43,5 +44,10 @@ public class GroupInformationService implements IGroupInformationService {
         groupInformation.setInvitingUser(invitingUser);
         groupInformationRepository.save(groupInformation);
         return true;
+    }
+
+    @Override
+    public List<GroupInformation> findByUserId(Long userId) {
+        return groupInformationRepository.findByUserId(userId);
     }
 }

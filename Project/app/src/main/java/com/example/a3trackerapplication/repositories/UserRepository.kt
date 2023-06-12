@@ -28,4 +28,8 @@ class UserRepository {
     suspend fun selectMentor(token: String, mentorId: Long): Response<User>?{
         return TrackerApi.getApi()?.getSelectMentor(token = token, mentorId = mentorId);
     }
+
+    suspend fun getUserActivities(token: String): Response<List<ActivityModel.UserData>>?{
+        return TrackerApi.getApi()?.getUserActivities(token = token);
+    }
 }

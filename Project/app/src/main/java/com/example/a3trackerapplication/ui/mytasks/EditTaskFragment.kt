@@ -15,12 +15,9 @@ import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.R
-import com.example.a3trackerapplication.TaskSelected
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.Group
-import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.TaskPriorities
 import com.example.a3trackerapplication.models.TaskStatus
@@ -109,8 +106,8 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             userListViewModel.userList.observe(viewLifecycleOwner) {
                 users = userListViewModel.userList.value!!.sortedBy { it.id }
                 groupViewModel.getGroups()
-                groupViewModel.groups.observe(viewLifecycleOwner) {
-                    groups = groupViewModel.groups.value!!.sortedBy { it.groupId }
+                groupViewModel.myGroups.observe(viewLifecycleOwner) {
+                    groups = groupViewModel.myGroups.value!!.sortedBy { it.groupId }
 
                     if (taskId != null) {
                         editTaskViewModel.getTask(taskId!!)

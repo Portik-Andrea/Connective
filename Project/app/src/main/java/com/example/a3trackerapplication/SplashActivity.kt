@@ -47,7 +47,7 @@ class SplashActivity : AppCompatActivity() {
         appNameTextView.startAnimation(top)
         taskManagerTextView.startAnimation(top)
     }
-    private fun getMyUser():Boolean{
+    /*private fun getMyUser():Boolean{
         var tokenIsValid: Boolean = false
         lifecycleScope.launch{
             try {
@@ -67,5 +67,5 @@ class SplashActivity : AppCompatActivity() {
         }
 
         return tokenIsValid
-    }
+    }*/
 }

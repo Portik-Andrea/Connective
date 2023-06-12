@@ -21,6 +21,10 @@
     <string name="members">Members</string>
     <string name="all_members">All members:</string>
     <string name="add_new_member">Add new member</string>
+    <string name="tasks">Tasks</string>
+    <string name="assignee">Assignee:</string>
+    <string name="group">Group</string>
+    <string name="announcement">Announcement</string>
     <string-array name="tasks_type">
         <item>Recently Added</item>
         <item>Active tasks</item>

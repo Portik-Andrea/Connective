@@ -18,4 +18,6 @@ public interface IUserRepository extends JpaRepository<UserEntity, Long> {
     Optional<UserEntity> findByToken(String token);
 
     List<UserEntity> findAllByType(UserType type);
+
+    List<UserEntity> findByMentorIsNotNull();
 }

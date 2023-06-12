@@ -1,7 +1,6 @@
 package com.example.a3trackerapplication.ui.mygroups
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +13,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.adapter.GroupAdapter
 import com.example.a3trackerapplication.adapter.OnGroupClickListener
-import com.example.a3trackerapplication.adapter.TaskAdapter
 import com.example.a3trackerapplication.models.Group
-import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.repositories.GroupRepository
-import com.example.a3trackerapplication.repositories.TaskRepository
-import com.example.a3trackerapplication.ui.mytasks.MyTasksViewModel
-import com.example.a3trackerapplication.ui.mytasks.MyTasksViewModelFactory
 
 
 class MyGroupsFragment : Fragment(), OnGroupClickListener {
@@ -45,8 +39,8 @@ class MyGroupsFragment : Fragment(), OnGroupClickListener {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
             groupViewModel.getGroups()
-            groupViewModel.groups.observe(viewLifecycleOwner) {
-                list = groupViewModel.groups.value!!
+            groupViewModel.myGroups.observe(viewLifecycleOwner) {
+                list = groupViewModel.myGroups.value!!.sortedBy { it.groupId }
                 val recyclerView: RecyclerView = view.findViewById(R.id.groupsRecyclerView)
                 recyclerView.adapter = GroupAdapter(list, this@MyGroupsFragment)
                 recyclerView.layoutManager = LinearLayoutManager(context)

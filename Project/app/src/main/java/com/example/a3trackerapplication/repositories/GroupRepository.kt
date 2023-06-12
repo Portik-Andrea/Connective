@@ -1,6 +1,7 @@
 package com.example.a3trackerapplication.repositories
 
 import com.example.a3trackerapplication.api.TrackerApi
+import com.example.a3trackerapplication.models.ActivityModel
 import com.example.a3trackerapplication.models.AddMember
 import com.example.a3trackerapplication.models.Group
 import com.example.a3trackerapplication.models.User
@@ -19,5 +20,9 @@ class GroupRepository {
 
     suspend fun addNewMember(token: String, addMember: AddMember): Response<String>? {
         return TrackerApi.getApi()?.addNewMember(token = token, request = addMember);
+    }
+
+    suspend fun getGroupActivities(token: String): Response<List<ActivityModel.GroupData>>? {
+        return TrackerApi.getApi()?.getGroupActivities(token = token);
     }
 }

@@ -1,6 +1,7 @@
 package com.example.a3trackerapplication.repositories
 
 import com.example.a3trackerapplication.api.TrackerApi
+import com.example.a3trackerapplication.models.ActivityModel
 import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.NewTaskRequest
 import com.example.a3trackerapplication.models.Task
@@ -27,4 +28,7 @@ class TaskRepository {
         return TrackerApi.getApi()?.getTask(token = token, taskId = taskId)
     }
 
+    suspend fun getTaskActivities(token: String): Response<List<ActivityModel.TaskData>>? {
+        return TrackerApi.getApi()?.getTaskActivities(token = token);
+    }
 }

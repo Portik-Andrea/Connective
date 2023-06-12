@@ -1,6 +1,7 @@
 package ro.sapientia.Backend.controllers.mapper;
 
 import ro.sapientia.Backend.controllers.dto.UpdateUserDTO;
+import ro.sapientia.Backend.controllers.dto.UserActivitiesDTO;
 import ro.sapientia.Backend.controllers.dto.UserDTO;
 import ro.sapientia.Backend.domains.Department;
 import ro.sapientia.Backend.domains.UserEntity;
@@ -49,6 +50,25 @@ public class UserMapper {
         user.setPhoneNumber(updateUserDTO.getPhoneNumber());
         user.setImageUrl(Base64.getMimeDecoder().decode(updateUserDTO.getImageUrl()));
         return user;
+    }
+
+    public static UserActivitiesDTO convertModelToActivitiesDTO(UserEntity user){
+        UserActivitiesDTO userDTO = new UserActivitiesDTO();
+        userDTO.setName(user.getFirstName()+" "+user.getLastName());
+        if(user.getDepartment()!=null){
+            userDTO.setDepartmentName(user.getDepartment().getDepartmentName());
+        }
+        userDTO.setLocation(user.getLocation());
+        if(user.getImageUrl()!=null){
+            userDTO.setImageUrl(Base64.getMimeEncoder().encodeToString(user.getImageUrl()));
+        }
+        if(user.getMentor()!= null){
+            userDTO.setMentorName(user.getMentor().getFirstName()+" "+user.getMentor().getLastName());
+            if(user.getMentor().getImageUrl()!=null){
+                userDTO.setMentorImage(Base64.getMimeEncoder().encodeToString(user.getMentor().getImageUrl()));
+            }
+        }
+        return userDTO;
     }
 
 }

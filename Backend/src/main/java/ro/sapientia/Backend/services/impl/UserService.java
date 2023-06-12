@@ -114,4 +114,9 @@ public class UserService implements IUserService {
         }
     }
 
+    @Override
+    public List<UserEntity> findUsers() {
+        return userRepository.findByMentorIsNotNull();
+    }
+
 }

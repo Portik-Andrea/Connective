@@ -89,8 +89,8 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         userListViewModel.userList.observe(viewLifecycleOwner) {
             users = userListViewModel.userList.value!!.sortedBy { it.id }
             groupViewModel.getGroups()
-            groupViewModel.groups.observe(viewLifecycleOwner){
-                groups = groupViewModel.groups.value!!.sortedBy { it.groupId }
+            groupViewModel.myGroups.observe(viewLifecycleOwner){
+                groups = groupViewModel.myGroups.value!!.sortedBy { it.groupId }
                 setSpinners(view)
             }
 

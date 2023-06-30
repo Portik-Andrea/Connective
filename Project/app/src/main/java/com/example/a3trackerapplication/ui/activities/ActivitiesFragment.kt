@@ -54,37 +54,6 @@ class ActivitiesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        /*activitiesViewModel.getUserActivities()
-        activitiesViewModel.users.observe(viewLifecycleOwner) {
-            val users = activitiesViewModel.users.value
-            /*myTasksViewModel.getTaskActivities()
-            myTasksViewModel.tasks.observe(viewLifecycleOwner){
-                val tasks = myTasksViewModel.tasks.value
-
-                groupViewModel.getGroupActivities()
-                groupViewModel.groups.observe(viewLifecycleOwner){
-                    val groups = groupViewModel.groups.value*/
-                    val list: List<ActivityModel> = ArrayList<ActivityModel>()
-                    //list.plus(tasks)
-                    //list.plus(groups)
-                    list.plus(users)
-                    Log.d("xxx", "GetActivities list: $list")
-                    Log.d("xxx", "GetActivities users: $users")
-                    //Log.d("xxx", "GetActivities tasks: $tasks")
-                    //Log.d("xxx", "GetActivities groups: $groups")
-                    dataAdapter.setData(list)
-
-                    view.findViewById<RecyclerView>(R.id.activitiesRecyclerView)
-                        .apply {
-                            layoutManager = LinearLayoutManager(context)
-                            hasFixedSize()
-                            this.adapter = dataAdapter
-                        }
-               /* }
-
-            }*/
-
-        }*/
         progressBar = view.findViewById(R.id.progressBar)
         progressBar.visibility = View.VISIBLE
         myTasksViewModel.getTaskActivities()
@@ -95,7 +64,14 @@ class ActivitiesFragment : Fragment() {
                 val groups = groupViewModel.groups.value!!.sortedBy { it.joiningDate }.reversed()
                 progressBar.visibility = View.INVISIBLE
                 val list: List<ActivityModel> = concatenate(tasks!!,groups!!)
-                dataAdapter.setData(list)
+                val sortedList = list.sortedWith(compareByDescending<ActivityModel> {
+                    when (it) {
+                        is ActivityModel.TaskData -> it.createdTime
+                        is ActivityModel.GroupData -> it.joiningDate
+                        else -> 0
+                    }
+                })
+                dataAdapter.setData(sortedList)
 
                 view.findViewById<RecyclerView>(R.id.activitiesRecyclerView)
                     .apply {

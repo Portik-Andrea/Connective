@@ -2,6 +2,7 @@ package com.example.a3trackerapplication.api
 
 import com.example.a3trackerapplication.MyApplication
 import com.example.a3trackerapplication.util.Constants
+import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -14,13 +15,13 @@ object RetrofitInstance {
     var mHttpLoggingInterceptor = HttpLoggingInterceptor()
         .setLevel(HttpLoggingInterceptor.Level.BODY)
 
-    var mOkHttpClient = OkHttpClient
+    private var mOkHttpClient = OkHttpClient
         .Builder()
         .addInterceptor(mHttpLoggingInterceptor)
         .addInterceptor{chain ->
             val originalRequest = chain.request()
             val requestBuilder = originalRequest.newBuilder()
-                .header("Authorization", "Bearer ${MyApplication.token}") // A tokent itt adom at
+                .header("Authorization", "Bearer ${MyApplication.token}")
 
             val newRequest = requestBuilder.build()
             chain.proceed(newRequest)}
@@ -28,7 +29,7 @@ object RetrofitInstance {
 
     var mRetrofit: Retrofit? = null
 
-    var gson = GsonBuilder()
+    var gson: Gson = GsonBuilder()
         .setLenient()
         .create()
     val client: Retrofit?
@@ -43,5 +44,4 @@ object RetrofitInstance {
             }
             return mRetrofit
         }
-
 }

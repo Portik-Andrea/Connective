@@ -24,7 +24,7 @@
         android:layout_height="50dp"
         android:layout_marginTop="0dp"
         android:text="@string/add_new_member"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="25sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

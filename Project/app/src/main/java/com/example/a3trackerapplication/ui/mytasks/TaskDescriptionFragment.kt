@@ -21,6 +21,7 @@ import com.example.a3trackerapplication.models.EditTaskRequest
 import com.example.a3trackerapplication.models.Task
 import com.example.a3trackerapplication.models.TaskPriorities
 import com.example.a3trackerapplication.models.TaskStatus
+import com.example.a3trackerapplication.models.UserType
 import com.example.a3trackerapplication.repositories.TaskRepository
 import java.text.SimpleDateFormat
 import java.util.*
@@ -86,6 +87,9 @@ class TaskDescriptionFragment : Fragment() {
                     currentItem = editTaskViewModel.selectTask.value!!
                     registerListeners()
                 }
+                if(MyApplication.userType == UserType.MENTOR.name){
+                    editImageButton.visibility = View.VISIBLE
+                }
             }
             callBackTaskDescButton.setOnClickListener{
                 findNavController().navigate(R.id.action_taskDescriptionFragment_to_myTasksFragment)
@@ -102,7 +106,6 @@ class TaskDescriptionFragment : Fragment() {
 
     @SuppressLint("SetTextI18n")
     private fun registerListeners() {
-        Log.i("xxx", "Current Task $currentItem")
         titleTextView.text = currentItem.title
         projectTextView.text = currentItem.groupName+" project"
         val createTime = convertLongToTime(currentItem.createdTime,"HH:mm MMMM dd yyyy")
@@ -111,7 +114,6 @@ class TaskDescriptionFragment : Fragment() {
         assigneeToUserTextView.text = currentItem.assignedToUserName
         deadlineTextView.text = convertLongToTime(currentItem.deadline,"yyyy.MMMM.dd")
         descriptionTextView.text = currentItem.description
-        //setStatus(currentItem.status, statusTextView)
         setPriority(currentItem.priority,priorityTextView)
         setSpinners(requireView(),currentItem.status)
     }
@@ -136,16 +138,6 @@ class TaskDescriptionFragment : Fragment() {
         val format = SimpleDateFormat(simpleFormat)
         return format.format(date)
     }
-
-    /*private fun searchUserName(id: Long):String{
-        var name = ""
-        users?.forEach {
-            if(it.id== id){
-                name="${it.lastName} ${it.firstName}"
-            }
-        }
-        return name
-    }*/
     @SuppressLint("SetTextI18n")
     private fun setPriority(priority: TaskPriorities, textView: TextView){
         when(priority){
@@ -161,13 +153,6 @@ class TaskDescriptionFragment : Fragment() {
                 textView.text="Low prio"
                 textView.setTextColor(Color.parseColor("#3BB143"))
             }
-        }
-    }
-
-    private fun setProjectType(departmentId: Int, projectTextView: TextView) {
-        when(departmentId){
-            1 -> projectTextView.text = "HR project"
-            2 -> projectTextView.text = "Dev project"
         }
     }
 

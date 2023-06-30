@@ -81,6 +81,7 @@ public class TaskService implements ITaskService {
                     task.get().setPriority(Priority.valueOf(updateTaskDTO.getPriority()));
                     task.get().setDeadline(new Date(updateTaskDTO.getDeadline()));
                     task.get().setStatus(Status.valueOf(updateTaskDTO.getStatus()));
+                    task.get().setProgress(setProgress(task.get().getStatus(),task.get().getProgress()));
                     taskRepository.save(task.get());
                     return true;
                 }
@@ -92,6 +93,15 @@ public class TaskService implements ITaskService {
             throw new TaskNotFoundException(updateTaskDTO.getTaskId());
         }
         return false;
+    }
+
+    private int setProgress(Status status,int currentProgressValue){
+        return switch (status) {
+            case NEW -> 0;
+            case IN_PROGRESS -> 50;
+            case DONE -> 100;
+            default -> currentProgressValue;
+        };
     }
 
     @Override

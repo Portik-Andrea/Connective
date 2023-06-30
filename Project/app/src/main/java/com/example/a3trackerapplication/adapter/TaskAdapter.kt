@@ -1,11 +1,13 @@
 package com.example.a3trackerapplication.adapter
 
 import android.annotation.SuppressLint
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
@@ -20,14 +22,12 @@ import java.util.*
 
 interface OnTaskClickListener{
     fun onTaskClick(position: Int)
-    //abstract fun TaskAdapter(list: List<Task>, users: List<User>): TaskAdapter
 }
 
 class TaskAdapter(
-    private val list: List<Task>,
+    private var list: List<Task>,
     private val listener: MyTasksFragment
 ):  RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-    //var clickListener: ClickListener? = null
 
     // 1. user defined ViewHolder type
     inner class TaskViewHolder(itemView: View) :
@@ -41,14 +41,12 @@ class TaskAdapter(
         val statusTextView: TextView = itemView.findViewById(R.id.statusTextView)
         val deadlineTextView: TextView = itemView.findViewById(R.id.deadlineTextView)
         val priorityTextView: TextView = itemView.findViewById(R.id.priorityTextView)
+        val circle:ImageView = itemView.findViewById(R.id.circle)
         val descriptionTextView: TextView = itemView.findViewById(R.id.descriptionTextView)
         val progressBar: ProgressBar = itemView.findViewById(R.id.progressBar)
         // Constructor
         init{
-            //if(clickListener!= null){
             itemView.setOnClickListener( this )
-            //}
-
         }
 
         override fun onClick(p0: View?) {
@@ -60,19 +58,10 @@ class TaskAdapter(
 
         }
     }
-    /*fun setOnItemClickListener(clickListener: ClickListener) {
-        this.clickListener = clickListener
-    }*/
-    /*interface ClickListener{
-        fun onItemClick(position: Int)
-    }*/
-
-
 
     // 2. Called only a few times = number of items on screen + a few more ones
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         ++createCounter
-        Log.i("XXX", "onCreateViewHolder $createCounter")
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_layout, parent, false)
         return TaskViewHolder(itemView)
@@ -81,7 +70,6 @@ class TaskAdapter(
     // 3. Called many times, when we scroll the list
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         ++bindCounter
-        Log.i("XXX", "onBindViewHolder $bindCounter")
         val currentItem = list[position]
         holder.projectTextView.text = currentItem.groupName+" project"
         holder.titleTextView.text = currentItem.title
@@ -90,8 +78,9 @@ class TaskAdapter(
         holder.assigneeToUserTextView.text = currentItem.assignedToUserName
         holder.deadlineTextView.text = convertLongToTime(currentItem.deadline,"yyyy.MMMM.dd")
         holder.descriptionTextView.text = currentItem.description
-        setStatus(currentItem.status, holder.statusTextView)
-        setPriority(currentItem.priority,holder.priorityTextView)
+        holder.progressBar.progress = currentItem.progress
+        setStatus(currentItem.status, holder.statusTextView,holder.progressBar)
+        setPriority(currentItem.priority,holder.priorityTextView, holder.circle)
 
     }
 
@@ -111,26 +100,8 @@ class TaskAdapter(
         return format.format(date)
     }
 
-    /*private fun searchUserName(id: Long):String{
-        var name = ""
-        users.forEach {
-            if(it.id== id){
-                name="${it.lastName} ${it.firstName}"
-            }
-        }
-
-        return name
-    }*/
-
-    private fun setProjectType(departmentId: Int, projectTextView: TextView) {
-        when(departmentId){
-            1 -> projectTextView.text = "HR project"
-            2 -> projectTextView.text = "Dev project"
-        }
-    }
-
     @SuppressLint("SetTextI18n")
-    private fun setStatus(status: TaskStatus, textView: TextView){
+    private fun setStatus(status: TaskStatus, textView: TextView, progressBar: ProgressBar){
         when(status){
             TaskStatus.NEW -> {
                 textView.text="New"
@@ -141,31 +112,40 @@ class TaskAdapter(
                 textView.text= "In Progress"
                 textView.setTextColor(Color.parseColor("#FFFFFF"))
                 textView.setBackgroundColor(Color.parseColor("#828282"))
+                val colorStateList = ColorStateList.valueOf(Color.BLUE)
+                progressBar.progressTintList = colorStateList
                 }
             TaskStatus.DONE -> {
                 textView.text="Done"
                 textView.setTextColor(Color.parseColor("#3BB143"))
+                val colorStateList = ColorStateList.valueOf(Color.GREEN)
+                progressBar.progressTintList = colorStateList
             }
             else -> {
                 textView.text="Blocked"
                 textView.setBackgroundColor(Color.parseColor("#D30000"))
+                val colorStateList = ColorStateList.valueOf(Color.RED)
+                progressBar.progressTintList = colorStateList
             }
         }
     }
     @SuppressLint("SetTextI18n")
-    private fun setPriority(priority: TaskPriorities, textView: TextView){
+    private fun setPriority(priority: TaskPriorities, textView: TextView,circle: ImageView){
         when(priority){
             TaskPriorities.HIGH -> {
                 textView.text="High prio"
-                textView.setTextColor(Color.parseColor("#D30000"))
+                val colorStateList = ColorStateList.valueOf(Color.RED)
+                circle.backgroundTintList = colorStateList
             }
             TaskPriorities.MEDIUM -> {
                 textView.text= "Medium prio"
-                textView.setTextColor(Color.parseColor("#ED7014"))
+                val colorStateList = ColorStateList.valueOf(Color.rgb(237,112,20))
+                circle.backgroundTintList = colorStateList
             }
             TaskPriorities.LOW -> {
                 textView.text="Low prio"
-                textView.setTextColor(Color.parseColor("#3BB143"))
+                val colorStateList = ColorStateList.valueOf(Color.GREEN)
+                circle.backgroundTintList = colorStateList
             }
         }
     }

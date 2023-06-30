@@ -22,8 +22,6 @@ class LoginViewModelFactory(
 class LoginViewModel(private val repository: UserRepository) : ViewModel() {
 
     var loginResult: MutableLiveData<LoginResult> = MutableLiveData()
-
-
     fun login(request: LoginRequest) {
         viewModelScope.launch {
             try {

@@ -1,12 +1,9 @@
 package com.example.a3trackerapplication.ui.mytasks
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.AutoCompleteTextView
 import android.widget.ImageButton
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
@@ -19,33 +16,31 @@ import com.example.a3trackerapplication.R
 import com.example.a3trackerapplication.adapter.OnTaskClickListener
 import com.example.a3trackerapplication.adapter.TaskAdapter
 import com.example.a3trackerapplication.models.Task
-import com.example.a3trackerapplication.models.User
+import com.example.a3trackerapplication.models.TaskStatus
 import com.example.a3trackerapplication.repositories.TaskRepository
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 
 class MyTasksFragment : Fragment() , OnTaskClickListener {
     private lateinit var editTaskViewModel: EditTaskViewModel
     private lateinit var myTasksViewModel: MyTasksViewModel
     private lateinit var list: List<Task>
-    private var users : List<User>? = null
-    private lateinit var adapter: TaskAdapter
 
     private lateinit var addNewTaskButton: ImageButton
+
+    private val selectedChips: MutableSet<Int> = HashSet()
+    private lateinit var chipGroup: ChipGroup
+    private lateinit var recyclerView: RecyclerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = MyTasksViewModelFactory(TaskRepository())
-        myTasksViewModel = ViewModelProvider(this, factory).get(MyTasksViewModel::class.java)
+        myTasksViewModel = ViewModelProvider(this, factory)[MyTasksViewModel::class.java]
 
         val editTaskFactory = EditTaskViewModelFactory(TaskRepository())
-        editTaskViewModel = ViewModelProvider(this, editTaskFactory).get(EditTaskViewModel::class.java)
+        editTaskViewModel = ViewModelProvider(this, editTaskFactory)[EditTaskViewModel::class.java]
     }
 
-    override fun onResume() {
-        super.onResume()
-        val taskType = resources.getStringArray(R.array.tasks_type)
-        val arrayAdapter = ArrayAdapter(requireContext(),R.layout.dropdown_item,taskType)
-        requireView().findViewById<AutoCompleteTextView>(R.id.autoCompleteTextView).setAdapter(arrayAdapter)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -58,48 +53,47 @@ class MyTasksFragment : Fragment() , OnTaskClickListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         view.apply {
+            chipGroup = findViewById(R.id.chipGroup)
+            recyclerView = findViewById(R.id.recycler_view)
             addNewTaskButton = requireView().findViewById(R.id.addNewTaskButton)
             if(MyApplication.userType =="MENTOR"){
                 addNewTaskButton.visibility = View.VISIBLE
             }
             myTasksViewModel.getTasks()
             myTasksViewModel.myTasks.observe(viewLifecycleOwner) {
-                list = myTasksViewModel.myTasks.value!!
-                Log.i("xxx", "GetMy my tasks list in MyTasks fragment " + list.toString())
-                val recyclerView: RecyclerView = view.findViewById(R.id.recycler_view)
+                list = myTasksViewModel.myTasks.value!!.sorted()
                 recyclerView.adapter = TaskAdapter(list,this@MyTasksFragment)
                 recyclerView.layoutManager = LinearLayoutManager(context)
                 recyclerView.setHasFixedSize(true)
 
-
-                /*val manager = LinearLayoutManager(requireContext())
-                recyclerView.setLayoutManager(manager)
-                recyclerView.setHasFixedSize(true)
-                // 1. No event handling
-                // recycler_view.adapter = DataAdapter(list)
-                // 2. Event handling - pass fragment (this) to data adapter
-                if(list!=null && users!=null){
-                    adapter = TaskAdapter(list, users!!)
-                    adapter.setOnItemClickListener(object  : TaskAdapter.ClickListener{
-                        override fun onItemClick(position: Int){
-                            MyApplication.taskPosition = position
-                            val prefs1 = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                            val edit = prefs1.edit()
-                            edit.putInt("taskPosition", MyApplication.taskPosition)
-                            TaskSelected.created_by_user_ID = list[position].createdByUserId
-                            TaskSelected.assigned_to_user_ID = list[position].assignedToUserId
-                            Log.d("xxx", "GetMy task1 position in description ${MyApplication.taskPosition}")
-                            findNavController().navigate(R.id.action_myTasksFragment_to_taskDescriptionFragment)
+                chipGroup.setOnCheckedStateChangeListener  { group, _ ->
+                    selectedChips.clear()
+                    for (i in 0 until group.childCount) {
+                        val chip = group.getChildAt(i) as Chip
+                        if (chip.isChecked) {
+                            selectedChips.add(chip.id)
                         }
-
-                    })
-                    recyclerView.adapter = adapter
-                    recyclerView.layoutManager = LinearLayoutManager(this.context)
-                    recyclerView.setHasFixedSize(true)*/
+                    }
+                    val filteredList: List<Task> = if (selectedChips.isEmpty()) {
+                        list
+                    } else {
+                        list.filter { task ->
+                            when {
+                                selectedChips.contains(R.id.chip_1) && task.status == TaskStatus.NEW -> true
+                                selectedChips.contains(R.id.chip_2) && task.status == TaskStatus.IN_PROGRESS -> true
+                                selectedChips.contains(R.id.chip_3) && task.status==TaskStatus.DONE -> true
+                                else -> false
+                            }
+                        }
+                    }
+                    recyclerView.adapter = TaskAdapter(filteredList,this@MyTasksFragment)
+                    recyclerView.layoutManager = LinearLayoutManager(context)
+                    recyclerView.setHasFixedSize(true)
                 }
-                registerListeners()
             }
+            registerListeners()
         }
+    }
 
     override fun onTaskClick(position: Int) {
         var clickedItem : Task = list[position]
@@ -108,7 +102,6 @@ class MyTasksFragment : Fragment() , OnTaskClickListener {
         )
         findNavController().navigate(R.id.action_myTasksFragment_to_taskDescriptionFragment,bundle)
     }
-
 
     private fun registerListeners() {
         addNewTaskButton.setOnClickListener{

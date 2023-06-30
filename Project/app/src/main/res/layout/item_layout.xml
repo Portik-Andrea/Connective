@@ -75,25 +75,25 @@
                 android:id="@+id/assigneeTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
                 android:layout_marginBottom="12dp"
+                android:layout_marginLeft="10dp"
                 android:text="Assignee:"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/titleView"
-                app:layout_constraintEnd_toStartOf="@+id/assigneeToUserTextView"
-                app:layout_constraintHorizontal_bias="0.09"
                 app:layout_constraintStart_toStartOf="parent" />
 
             <TextView
                 android:id="@+id/assigneeToUserTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="204dp"
+                android:layout_marginStart="5dp"
                 android:text="assignee to user"
                 android:textSize="10sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/assigneeTextView"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.268" />
 
@@ -125,12 +125,12 @@
                 android:id="@+id/deadlineStringTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="10dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 android:text="Deadline:"
                 android:textSize="10sp"
                 app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
-                app:layout_constraintEnd_toStartOf="@+id/deadlineTextView"
                 app:layout_constraintHorizontal_bias="0.294"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/titleView" />
@@ -139,6 +139,7 @@
                 android:id="@+id/deadlineTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="5dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="136dp"
                 android:layout_marginBottom="8dp"
@@ -147,6 +148,8 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
                 app:layout_constraintEnd_toStartOf="@+id/priorityTextView"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/deadlineStringTextView"
                 app:layout_constraintTop_toBottomOf="@+id/titleView"
                 app:layout_constraintVertical_bias="0.545" />
 
@@ -165,16 +168,17 @@
 
             <ImageView
                 android:id="@+id/circle"
-                android:layout_width="8sp"
-                android:layout_height="8sp"
+                android:layout_width="10sp"
+                android:layout_height="10sp"
                 android:layout_centerHorizontal="true"
                 android:layout_marginEnd="20dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                android:src="@drawable/circle"
+                android:background="@drawable/circle"
+                android:backgroundTint="@color/blue"
                 app:layout_constraintBottom_toTopOf="@+id/descriptionTextView"
                 app:layout_constraintTop_toBottomOf="@+id/titleView"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"/>
 
             <TextView
                 android:id="@+id/descriptionTextView"

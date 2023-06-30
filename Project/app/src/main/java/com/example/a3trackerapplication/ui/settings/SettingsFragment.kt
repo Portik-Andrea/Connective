@@ -8,8 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
+import com.example.a3trackerapplication.MainActivity
 import com.example.a3trackerapplication.R
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsFragment : Fragment() {
     private lateinit var viewProfileTextView:TextView
@@ -49,6 +52,10 @@ class SettingsFragment : Fragment() {
             val editor = preferences.edit()
             editor.clear()
             editor.apply()
+            val bottomNav = activity?.findViewById<BottomNavigationView>(R.id.bottomNavigation)
+            if (bottomNav != null) {
+                bottomNav.menu.findItem(R.id.activitiesFragment).isChecked = true
+            }
             findNavController().navigate(R.id.action_settingsFragment_to_loginFragment)
         }
     }

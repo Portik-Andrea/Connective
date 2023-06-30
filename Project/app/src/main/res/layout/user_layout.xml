@@ -11,6 +11,7 @@
         android:id="@+id/userCircleImageView"
         android:layout_width="75dp"
         android:layout_height="75dp"
+        android:layout_margin="5dp"
         android:layout_centerInParent="true"
         android:src="@drawable/profile_img"
         app:civ_border_color="#FF000000"

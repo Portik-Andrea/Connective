@@ -20,14 +20,17 @@
 
     <TextView
         android:id="@+id/selectGroupTextView"
-        android:layout_width="300sp"
-        android:layout_height="50dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Group Name"
-        android:textColor="@color/black"
-        android:textSize="25dp"
+        android:textColor="@color/white"
+        android:textSize="22dp"
+        android:padding="10dp"
+        android:layout_marginLeft="25dp"
+        android:layout_marginBottom="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.450"
+        app:layout_constraintHorizontal_bias="0.1"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.01" />
@@ -36,16 +39,18 @@
         android:id="@+id/addUserToGroupButton"
         android:layout_width="50dp"
         android:layout_height="50dp"
+        android:layout_marginRight="10dp"
         android:layout_marginBottom="2dp"
         android:background="@color/blue"
-        android:visibility="invisible"
         android:src="@drawable/ic_baseline_add_circle_24"
+        android:visibility="invisible"
         app:layout_constraintBottom_toTopOf="@+id/titleView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.392"
+        app:layout_constraintHorizontal_bias="0.904"
         app:layout_constraintStart_toEndOf="@+id/selectGroupTextView"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintVertical_bias="1.0"
+        app:tint="@color/white"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <View
@@ -65,6 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="30dp"
         android:text="@string/all_members"
+        android:textStyle="bold"
         android:textSize="18sp"
         android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
@@ -83,5 +89,17 @@
         tools:ignore="SpeakableTextPresentCheck"
         tools:itemCount="0"
         tools:listitem="@layout/user_layout" />
+
+    <ProgressBar
+        android:id="@+id/membersProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="280dp"
+        android:backgroundTint="@color/blue"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/titleView" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

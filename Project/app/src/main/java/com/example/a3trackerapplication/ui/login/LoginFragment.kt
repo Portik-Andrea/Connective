@@ -2,11 +2,13 @@ package com.example.a3trackerapplication.ui.login
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
@@ -16,6 +18,7 @@ import com.example.a3trackerapplication.models.LoginRequest
 import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.google.android.material.textfield.TextInputEditText
+import org.mindrot.jbcrypt.BCrypt
 
 
 class LoginFragment : Fragment() {
@@ -26,8 +29,19 @@ class LoginFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = LoginViewModelFactory(UserRepository())
-        loginViewModel = ViewModelProvider(this, factory).get(LoginViewModel::class.java)
+        loginViewModel = ViewModelProvider(this, factory)[LoginViewModel::class.java]
+
+        activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(!shouldInterceptBackPress()){
+                    isEnabled = false
+                    activity?.onBackPressed()
+                }
+            }
+        })
     }
+
+    fun shouldInterceptBackPress()=true
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -43,7 +57,6 @@ class LoginFragment : Fragment() {
         emailEditText = view.findViewById(R.id.email)
         val passwordEditText: TextInputEditText = view.findViewById(R.id.password)
         val loginButton: Button = view.findViewById(R.id.loginButton)
-        val testButton: Button = view.findViewById(R.id.testButton)
 
         val prefs = requireActivity().getPreferences(Context.MODE_PRIVATE)
         if (!prefs.getString("email", "").equals("")) {
@@ -60,11 +73,9 @@ class LoginFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
+                val hashedPassword = hashPassword(password)
                 loginViewModel.login(LoginRequest(email, password))
             }
-        }
-        testButton.setOnClickListener {
-
         }
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
@@ -89,15 +100,19 @@ class LoginFragment : Fragment() {
                     it.toString(),
                     Toast.LENGTH_LONG
                 ).show()
-                val prefs1 = requireActivity().getPreferences(Context.MODE_PRIVATE)
-                val edit = prefs1.edit()
+                val preferences = requireActivity().getPreferences(Context.MODE_PRIVATE)
+                val edit = preferences.edit()
                 edit.putString("token", MyApplication.token)
-                //edit.putLong("deadline", MyApplication.deadline)
+                edit.putString("userType",MyApplication.userType)
                 edit.putString("email", emailEditText.text.toString())
                 edit.apply()
                 findNavController().navigate(R.id.action_loginFragment_to_activitiesFragment)
             }
         }
+    }
 
+    fun hashPassword(password: String): String {
+        val saltRounds = 12
+        return BCrypt.hashpw(password, BCrypt.gensalt(saltRounds))
     }
 }

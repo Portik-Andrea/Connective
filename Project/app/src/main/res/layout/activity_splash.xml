@@ -6,9 +6,10 @@
     android:orientation="vertical"
     android:layout_gravity="center"
     android:gravity="center"
+    android:background="@color/blue"
     tools:context=".SplashActivity">
 
-    <TextView
+    <!--<TextView
         android:id="@+id/appNameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -18,6 +19,11 @@
         android:id="@+id/taskManageTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="OKR &amp; Task Managemant" />
+        android:text="OKR &amp; Task Managemant" />-->
 
+    <ImageView
+        android:id="@+id/appNameImageView"
+        android:layout_width="wrap_content"
+        android:layout_height="240dp"
+        android:src="@drawable/app_name"/>
 </LinearLayout>

@@ -7,6 +7,7 @@ import android.os.Handler
 import android.util.Log
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
@@ -21,8 +22,7 @@ import okhttp3.internal.platform.android.ConscryptSocketAdapter.Companion.factor
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : AppCompatActivity() {
     private var SPLASH_SCREEN = 2500
-    private lateinit var appNameTextView: TextView
-    private lateinit var taskManagerTextView: TextView
+    private lateinit var appNameImageView: ImageView
     private lateinit var top: Animation
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,14 +40,11 @@ class SplashActivity : AppCompatActivity() {
 
     }
     private fun initViewItems() {
-        appNameTextView = this.findViewById(R.id.appNameTextView)
-        taskManagerTextView = this.findViewById(R.id.taskManageTextView)
+        appNameImageView = this.findViewById(R.id.appNameImageView)
         top = AnimationUtils.loadAnimation(this,R.anim.top)
-
-        appNameTextView.startAnimation(top)
-        taskManagerTextView.startAnimation(top)
+        appNameImageView.startAnimation(top)
     }
-    /*private fun getMyUser():Boolean{
+    private fun getMyUser():Boolean{
         var tokenIsValid: Boolean = false
         lifecycleScope.launch{
             try {
@@ -67,5 +64,5 @@ class SplashActivity : AppCompatActivity() {
         }
 
         return tokenIsValid
-    }*/
+    }
 }

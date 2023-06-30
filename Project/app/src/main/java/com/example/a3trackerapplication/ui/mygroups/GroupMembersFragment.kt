@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.OnBackPressedCallback
 import androidx.core.os.bundleOf
@@ -30,6 +31,7 @@ class GroupMembersFragment : Fragment() {
     private lateinit var selectGroupTextView: TextView
     private lateinit var callBackSelectGroupButton: ImageButton
     private lateinit var addUserToGroupButton: ImageButton
+    private lateinit var progressBar: ProgressBar
     private lateinit var groupMembersViewModel: GroupMembersViewModel
     private var groupId: Long? = null
     private var groupName: String? = null
@@ -75,9 +77,12 @@ class GroupMembersFragment : Fragment() {
             if(MyApplication.userType == UserType.MENTOR.toString()){
                 addUserToGroupButton.visibility = View.VISIBLE
             }
+            progressBar = view.findViewById(R.id.membersProgressBar)
+            progressBar.visibility = View.VISIBLE
             groupMembersViewModel.getGroupMembers(groupId!!)
             groupMembersViewModel.members.observe(viewLifecycleOwner) {
                 list = groupMembersViewModel.members.value!!
+                progressBar.visibility = View.INVISIBLE
                 val recyclerView: RecyclerView = view.findViewById(R.id.membersRecyclerView)
                 recyclerView.adapter = UserAdapter(list)
                 recyclerView.layoutManager = LinearLayoutManager(context)

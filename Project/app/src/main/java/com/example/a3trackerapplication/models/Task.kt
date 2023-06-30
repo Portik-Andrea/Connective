@@ -18,4 +18,13 @@ data class Task(
     var groupName: String,
     var status: TaskStatus,
     var progress: Int
-)
+): Comparable<Task> {
+
+    override fun compareTo(other: Task): Int {
+        val statusComparison = status.compareTo(other.status)
+        if (statusComparison != 0) {
+            return statusComparison
+        }
+        return priority.compareTo(other.priority)
+    }
+}

@@ -254,7 +254,7 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         if (prioritySpinner != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, priorities)
             prioritySpinner.adapter = adapter
-
+            prioritySpinner.setSelection(currentTask.priority.ordinal)
             prioritySpinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,

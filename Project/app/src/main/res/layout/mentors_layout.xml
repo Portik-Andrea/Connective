@@ -19,13 +19,15 @@
             android:layout_width="match_parent"
             android:layout_height="200sp">
 
-            <ImageView
+            <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/mentorImageView"
                 android:layout_width="100sp"
                 android:layout_height="100sp"
                 android:layout_margin="10sp"
                 android:layout_marginTop="16dp"
                 android:src="@drawable/profile_img"
+                app:civ_border_color="#FF000000"
+                app:civ_border_width="1dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.064"
                 app:layout_constraintStart_toStartOf="parent"
@@ -85,6 +87,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/round_blue_button"
                 android:text="Select"
+                android:textColor="@color/white"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.141"

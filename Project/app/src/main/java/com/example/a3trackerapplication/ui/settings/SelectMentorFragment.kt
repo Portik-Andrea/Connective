@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
+import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.lifecycle.ViewModelProvider
@@ -26,6 +27,8 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
     private lateinit var adapter: MentorAdapter
     private lateinit var selectMentorViewModel: SelectMentorViewModel
     private lateinit var myProfileViewModel: MyProfileViewModel
+
+    private lateinit var progressBar: ProgressBar
 
     private lateinit var callBackSelectMentorButton: ImageButton
 
@@ -59,11 +62,13 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        progressBar = view.findViewById(R.id.progressBarSelectMentor)
+        progressBar.visibility = View.VISIBLE
         callBackSelectMentorButton = view.findViewById(R.id.callBackSelectMentorButton)
         selectMentorViewModel.getAllMentors()
         selectMentorViewModel.allMentors.observe(viewLifecycleOwner){
             mentorList = selectMentorViewModel.allMentors.value!!
-
+            progressBar.visibility = View.INVISIBLE
             val recycleView: RecyclerView = view.findViewById(R.id.mentor_recycler_view)
             adapter = MentorAdapter(mentorList,this)
             recycleView.adapter = adapter

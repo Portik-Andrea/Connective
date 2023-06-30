@@ -40,16 +40,12 @@ public class LoginRegisterController {
     @PostMapping("/login")
     public LoginResponse login(
             @RequestBody @Valid final LoginRequest authenticationRequest) {
-        log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getEmail(),
                             authenticationRequest.getPassword()));
-            log.info("++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         } catch (final BadCredentialsException ex) {
-            log.info("Bad credentials");
-            log.info("-----------------------------------------------------");
             throw new ResponseStatusException(HttpStatus.UNAUTHORIZED,"Bad credentials");
         }
         final UserDetails userDetails =

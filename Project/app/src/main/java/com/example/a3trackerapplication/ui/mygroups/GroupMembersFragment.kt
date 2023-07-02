@@ -65,7 +65,6 @@ class GroupMembersFragment : Fragment() {
                 groupName = it.getString("groupName")
             }
         }
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_group_members, container, false)
     }
 

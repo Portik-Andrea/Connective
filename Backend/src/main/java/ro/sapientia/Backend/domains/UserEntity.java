@@ -3,8 +3,6 @@ package ro.sapientia.Backend.domains;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.ToString;
-
-import java.sql.Blob;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -45,7 +43,6 @@ public class UserEntity {
     @Column(name = "image_url",columnDefinition = "bytea")
     private byte[] imageUrl;
 
-    //egy mentor tobb mentoralt vagy egy mentor egy mentoralt ??
     @OneToOne
     @JoinColumn(name = "mentor_id")
     private UserEntity mentor;
@@ -241,7 +238,7 @@ public class UserEntity {
             userToString.append(appendMentor);
         }
         else{
-            userToString.append(", mentor nincs}");
+            userToString.append(", mentor not found}");
         }
         return userToString.toString();
     }

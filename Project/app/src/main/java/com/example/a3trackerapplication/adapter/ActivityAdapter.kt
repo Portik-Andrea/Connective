@@ -17,8 +17,6 @@ import java.util.Date
 class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHolder>() {
 
     private val adapterData = mutableListOf<ActivityModel>()
-
-    //--------onCreateViewHolder: inflate layout with view holder-------
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataAdapterViewHolder {
 
         val layout = when (viewType) {
@@ -35,8 +33,6 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHold
         return DataAdapterViewHolder(view)
     }
 
-
-    //-----------onBindViewHolder: bind view with data model---------
     override fun onBindViewHolder(holder: DataAdapterViewHolder, position: Int) {
         holder.bind(adapterData[position])
     }
@@ -58,7 +54,6 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHold
             addAll(data)
         }
     }
-
     companion object {
         private const val TYPE_TASK = 0
         private const val TYPE_GROUP = 1
@@ -66,9 +61,7 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHold
     }
 
     class DataAdapterViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         private fun bindTask(item: ActivityModel.TaskData) {
-            //Do your view assignment here from the data model
             if(item.creatorUserImage!= null) {
                 val decodeBitmap = decodeBase64ToImage(item.creatorUserImage)
                 itemView.findViewById<ImageView>(R.id.creatorCircleImageView)
@@ -84,7 +77,6 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHold
         }
 
         private fun bindGroup(item: ActivityModel.GroupData) {
-            //Do your view assignment here from the data model
             if(item.invitingUserImage!= null) {
                 val decodeBitmap = decodeBase64ToImage(item.invitingUserImage)
                 itemView.findViewById<ImageView>(R.id.mentorCircleImageView)
@@ -96,11 +88,9 @@ class ActivityAdapter : RecyclerView.Adapter<ActivityAdapter.DataAdapterViewHold
         }
 
         private fun bindColleague(item: ActivityModel.UserData) {
-            //Do your view assignment here from the data model
             itemView.findViewById<TextView>(R.id.mentorUserNameTextView)?.text = item.mentorName
             itemView.findViewById<TextView>(R.id.activityUserMessageTextView)?.text = "New joiner: "+item.name
         }
-
 
         fun bind(dataModel: ActivityModel) {
             when (dataModel) {

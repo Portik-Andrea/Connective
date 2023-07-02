@@ -32,7 +32,6 @@ class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
                 val response = repository.createTask(MyApplication.token,request)
                 if (response?.isSuccessful == true) {
                     createTaskResult.value = "SUCCESS"
-                    Log.d("xxx", "Login body" + response.body().toString())
                 } else {
                     val responseBody = response?.message();
                     val extractedText: String? = extractTextFromResponse(responseBody.toString())
@@ -43,7 +42,6 @@ class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
                 }
             } catch (e: Exception) {
                 createTaskResult.value = "UNKNOWN ERROR"
-                Log.i("xxx", "Login error $e")
             }
         }
     }
@@ -54,6 +52,6 @@ class NewTaskViewModel(private val repository: TaskRepository) : ViewModel()  {
         val endIndex = responseBody.indexOf(endTag)
         return if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
             responseBody.substring(startIndex + startTag.length, endIndex)
-        } else "nem sikerult konvertalni"
+        } else "failed to convert"
     }
 }

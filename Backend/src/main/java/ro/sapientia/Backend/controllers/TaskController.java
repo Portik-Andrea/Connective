@@ -4,7 +4,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import ro.sapientia.Backend.controllers.dto.CreateTaskDTO;
 import ro.sapientia.Backend.controllers.dto.TaskDTO;
@@ -13,11 +12,9 @@ import ro.sapientia.Backend.controllers.mapper.TaskMapper;
 import ro.sapientia.Backend.domains.Task;
 import ro.sapientia.Backend.services.ITaskService;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
-import org.springframework.context.support.DefaultMessageSourceResolvable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("api/v1/tasks")

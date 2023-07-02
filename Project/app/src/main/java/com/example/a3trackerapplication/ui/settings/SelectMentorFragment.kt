@@ -35,10 +35,10 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = SelectMentorViewModelFactory(UserRepository())
-        selectMentorViewModel = ViewModelProvider(this, factory).get(SelectMentorViewModel::class.java)
+        selectMentorViewModel = ViewModelProvider(this, factory)[SelectMentorViewModel::class.java]
 
         val myProfileFactory = MyProfileViewModelFactory(UserRepository())
-        myProfileViewModel = ViewModelProvider(this, myProfileFactory).get(MyProfileViewModel::class.java)
+        myProfileViewModel = ViewModelProvider(this, myProfileFactory)[MyProfileViewModel::class.java]
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -81,8 +81,7 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
     }
 
     override fun onSelectClick(position: Int){
-        var mentor = mentorList[position]
-        //var encodeMentorId = encryptId(mentor.id)
+        val mentor = mentorList[position]
         myProfileViewModel.selectMentor(mentor.id)
         myProfileViewModel.mentor.observe(viewLifecycleOwner){
             if(it.id==mentor.id){
@@ -93,18 +92,6 @@ class SelectMentorFragment : Fragment(), OnItemClickListener {
                 ).show()
             }
         }
-    }
-
-    private fun encryptId(id: Long): String {
-        val bytes = id.toString().toByteArray(Charsets.UTF_8)
-        return Base64.encodeToString(bytes, Base64.DEFAULT)
-    }
-
-    private fun encodeLongToByteArray(value: Long): ByteArray {
-        val buffer = ByteBuffer.allocate(java.lang.Long.BYTES)
-        //buffer.order(ByteOrder.BIG_ENDIAN)
-        buffer.putLong(value)
-        return buffer.array()
     }
 
 }

@@ -28,8 +28,6 @@ class TaskAdapter(
     private var list: List<Task>,
     private val listener: MyTasksFragment
 ):  RecyclerView.Adapter<TaskAdapter.TaskViewHolder>() {
-
-    // 1. user defined ViewHolder type
     inner class TaskViewHolder(itemView: View) :
         RecyclerView.ViewHolder(itemView),
         View.OnClickListener {
@@ -50,16 +48,13 @@ class TaskAdapter(
         }
 
         override fun onClick(p0: View?) {
-            // Delegate event handling to ListFragment
             val position: Int = adapterPosition
             if( position != RecyclerView.NO_POSITION ) {
                 listener.onTaskClick(position)
             }
-
         }
     }
 
-    // 2. Called only a few times = number of items on screen + a few more ones
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
         ++createCounter
         val itemView =
@@ -67,7 +62,6 @@ class TaskAdapter(
         return TaskViewHolder(itemView)
     }
 
-    // 3. Called many times, when we scroll the list
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         ++bindCounter
         val currentItem = list[position]

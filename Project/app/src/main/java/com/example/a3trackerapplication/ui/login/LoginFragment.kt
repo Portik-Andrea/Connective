@@ -19,6 +19,7 @@ import com.example.a3trackerapplication.models.LoginResult
 import com.example.a3trackerapplication.repositories.UserRepository
 import com.google.android.material.textfield.TextInputEditText
 import org.mindrot.jbcrypt.BCrypt
+import java.util.Base64
 
 
 class LoginFragment : Fragment() {
@@ -73,8 +74,8 @@ class LoginFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                val hashedPassword = hashPassword(password)
-                loginViewModel.login(LoginRequest(email, password))
+                val encodePassword = Base64.getEncoder().encodeToString(password.toByteArray())
+                loginViewModel.login(LoginRequest(email, encodePassword))
             }
         }
 
@@ -109,10 +110,5 @@ class LoginFragment : Fragment() {
                 findNavController().navigate(R.id.action_loginFragment_to_activitiesFragment)
             }
         }
-    }
-
-    fun hashPassword(password: String): String {
-        val saltRounds = 12
-        return BCrypt.hashpw(password, BCrypt.gensalt(saltRounds))
     }
 }

@@ -1,21 +1,15 @@
 package ro.sapientia.Backend.controllers;
 
-import org.springframework.context.support.DefaultMessageSourceResolvable;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import ro.sapientia.Backend.services.exceptions.*;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 
@@ -78,7 +72,6 @@ public class NotFoundAdvice{
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        //ResponseEntity<String> response = new ResponseEntity<>(errors.values().toString(),HttpStatus.BAD_REQUEST);
         return errors.values().toString();
     }
 }

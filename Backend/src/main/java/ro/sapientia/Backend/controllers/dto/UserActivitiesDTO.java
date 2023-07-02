@@ -16,10 +16,4 @@ public class UserActivitiesDTO {
     private String departmentName;
     private String location;
     private String imageUrl;
-    /*var name: String,
-    var mentorName: String,
-    var mentorImage: String?,
-    var departmentName: String,
-    var location: String?,
-    var imageUrl: String?*/
 }

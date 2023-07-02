@@ -2,9 +2,7 @@ package ro.sapientia.Backend.domains;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.Positive;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -27,13 +25,10 @@ public class Task {
     @JoinColumn(name = "assigned_to_user_id")
     private UserEntity assignedToUser;
 
-    //@OneToOne(cascade = CascadeType.ALL, optional = false)
     @OneToOne
-    //@NotEmpty(message = "Creator is mandatory")
     private UserEntity creatorUser;
 
     @Column(name = "created_time")
-    //@NotEmpty(message = "The created time is mandatory")
     private Date createdTime;
 
     @OneToOne

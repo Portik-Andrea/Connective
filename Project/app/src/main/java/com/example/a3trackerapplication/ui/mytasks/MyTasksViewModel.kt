@@ -29,14 +29,12 @@ class MyTasksViewModel(private val repository: TaskRepository): ViewModel() {
                 val response = repository.getMyTasks(MyApplication.token)
                 if(response?.isSuccessful == true) {
                     myTasks.value = response.body()
-                    Log.d("xxx", "GetMy tasks response ${response.body()}")
+
                 } else{
                     if (response != null) {
-                        Log.i("xxx-uvm", response.message())
                     }
                 }
             } catch (e: Exception) {
-                Log.i("xxx", e.toString())
             }
         }
     }

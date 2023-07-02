@@ -60,7 +60,7 @@ class MyProfileFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val factory = MyProfileViewModelFactory(UserRepository())
-        myProfileViewModel = ViewModelProvider(this, factory).get(MyProfileViewModel::class.java)
+        myProfileViewModel = ViewModelProvider(this, factory)[MyProfileViewModel::class.java]
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -85,13 +85,12 @@ class MyProfileFragment : Fragment() {
         myProfileViewModel.myUser()
         myProfileViewModel.user.observe(viewLifecycleOwner) {
             val user = myProfileViewModel.user.value
-            Log.i("xxx","GetMy user "+ user.toString())
             if (user != null) {
                 userNameEditText.setText(user.firstName+" "+user.lastName)
                 roleTypeTextView.text = user.departmentName
                 emailAddressTextView.text = user.email
                 if(user.imageUrl!= null){
-                    var decodeBitmap = decodeBase64ToImage(user.imageUrl!!)
+                    val decodeBitmap = decodeBase64ToImage(user.imageUrl!!)
                     imageView.setImageBitmap(decodeBitmap)
                 }
                 if(user.phoneNumber!= null){
@@ -149,8 +148,8 @@ class MyProfileFragment : Fragment() {
                     Toast.LENGTH_LONG
                 ).show()
             } else {
-                var lastName = name[0]
-                var firstName = name[1]
+                val lastName = name[0]
+                val firstName = name[1]
 
                 myProfileViewModel.updateMyProfile(UpdateUserRequest(lastName,firstName,location,phoneNumber, imageUrl))
             }

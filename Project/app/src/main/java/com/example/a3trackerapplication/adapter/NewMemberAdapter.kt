@@ -21,7 +21,6 @@ class NewMemberAdapter(
     private val list: List<User>,
     private val listener: OnUserClickListener
 ) : RecyclerView.Adapter<NewMemberAdapter.DataViewHolder>() {
-    // 1. user defined ViewHolder type
     inner class DataViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView),View.OnClickListener {
         val userCircleImageView: ImageView = itemView.findViewById(R.id.userCircleImageView)
         val userNameTextView: TextView = itemView.findViewById(R.id.userNameTextView)
@@ -41,12 +40,12 @@ class NewMemberAdapter(
             }
         }
     }
-    // 2. Called only a few times = number of items on screen + a few more ones
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DataViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.search_user_layout, parent, false)
         return DataViewHolder(itemView)
     }
-    // 3. Called many times, when we scroll the list
+
     override fun onBindViewHolder(holder: DataViewHolder, position: Int) {
         val currentUser = list[position]
         if(currentUser.imageUrl!=null){
@@ -57,7 +56,7 @@ class NewMemberAdapter(
         holder.userDepartmentTextView.text = currentUser.departmentName
 
     }
-    // 4.
+
     override fun getItemCount() = list.size
 
     private fun decodeBase64ToImage(image: String): Bitmap {

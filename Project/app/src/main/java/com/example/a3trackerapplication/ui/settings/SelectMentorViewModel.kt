@@ -28,14 +28,11 @@ class SelectMentorViewModel(private val repository: UserRepository): ViewModel()
                 val response = repository.getAllMentors(MyApplication.token)
                 if(response?.isSuccessful == true) {
                     allMentors.value = response.body()
-                    Log.d("xxx", "GetMentors response ${response.body()}")
                 } else{
                     if (response != null) {
-                        Log.i("xxx-uvm", response.message())
                     }
                 }
             } catch (e: Exception) {
-                Log.i("xxx", e.toString())
             }
         }
     }

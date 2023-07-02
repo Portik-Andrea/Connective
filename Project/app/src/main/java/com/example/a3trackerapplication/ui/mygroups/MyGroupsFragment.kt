@@ -20,7 +20,6 @@ import com.example.a3trackerapplication.repositories.GroupRepository
 class MyGroupsFragment : Fragment(), OnGroupClickListener {
     private lateinit var groupViewModel: GroupViewModel
     private lateinit var list: List<Group>
-    private lateinit var adapter: GroupAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

@@ -96,7 +96,7 @@ class MyTasksFragment : Fragment() , OnTaskClickListener {
     }
 
     override fun onTaskClick(position: Int) {
-        var clickedItem : Task = list[position]
+        val clickedItem : Task = list[position]
         val bundle = bundleOf(
             "taskId" to clickedItem.taskId
         )

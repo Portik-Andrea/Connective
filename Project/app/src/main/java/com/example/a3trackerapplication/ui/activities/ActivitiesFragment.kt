@@ -1,7 +1,6 @@
 package com.example.a3trackerapplication.ui.activities
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +19,6 @@ import com.example.a3trackerapplication.ui.mygroups.GroupViewModel
 import com.example.a3trackerapplication.ui.mygroups.GroupViewModelFactory
 import com.example.a3trackerapplication.ui.mytasks.MyTasksViewModel
 import com.example.a3trackerapplication.ui.mytasks.MyTasksViewModelFactory
-import com.example.a3trackerapplication.util.UserListViewModel
-import com.example.a3trackerapplication.util.UserListViewModelFactory
 
 class ActivitiesFragment : Fragment() {
     private lateinit var myTasksViewModel: MyTasksViewModel
@@ -48,7 +45,6 @@ class ActivitiesFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_activities, container, false)
     }
 
@@ -80,7 +76,6 @@ class ActivitiesFragment : Fragment() {
                         this.adapter = dataAdapter
                     }
             }
-
         }
     }
     private fun  concatenate(vararg lists: List<ActivityModel>): List<ActivityModel> {

@@ -24,7 +24,7 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 public class UserService implements IUserService {
-    private IUserRepository userRepository;
+    private final IUserRepository userRepository;
 
     private IDepartmentRepository departmentRepository;
 
@@ -34,7 +34,7 @@ public class UserService implements IUserService {
     @Override
     public UserEntity findUserByID(Long id) throws ServiceException {
         Optional<UserEntity> user = userRepository.findById(id);
-        if(!user.isPresent()){
+        if(user.isEmpty()){
             throw new UserNotFoundException(id);
         }
         return user.get();
@@ -88,12 +88,6 @@ public class UserService implements IUserService {
     @Transactional(readOnly = false)
     public UserEntity addMentor(Long userId, Long mentorId){
         UserEntity user = findUserByID(userId);
-        //byte[] decodeId = Base64.getMimeDecoder().decode(mentorId);
-        /*var decodeId = Base64Utils.decodeFromString(mentorId);
-        ByteBuffer buffer = ByteBuffer.wrap(decodeId);
-        buffer.order(ByteOrder.BIG_ENDIAN);
-        //Long decodeLongId = 1L;
-        Long decodeLongId = buffer.getLong();*/
         UserEntity mentor = findUserByID(mentorId);
         if(user.getMentor()== null) {
             user.setMentor(mentor);

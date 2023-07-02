@@ -56,11 +56,11 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val usersFactory = UserListViewModelFactory(UserRepository())
-        userListViewModel = ViewModelProvider(this, usersFactory).get(UserListViewModel::class.java)
+        userListViewModel = ViewModelProvider(this, usersFactory)[UserListViewModel::class.java]
         val factory = NewTaskViewModelFactory(TaskRepository())
-        newTaskViewModel = ViewModelProvider(this, factory).get(NewTaskViewModel::class.java)
+        newTaskViewModel = ViewModelProvider(this, factory)[NewTaskViewModel::class.java]
         val groupFactory = GroupViewModelFactory(GroupRepository())
-        groupViewModel = ViewModelProvider(this, groupFactory).get(GroupViewModel::class.java)
+        groupViewModel = ViewModelProvider(this, groupFactory)[GroupViewModel::class.java]
 
         activity?.onBackPressedDispatcher?.addCallback(this, object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
@@ -99,9 +99,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
         createTaskButton.setOnClickListener {
             title= taskNameEditText.text.toString()
             description = descriptionEditText.text.toString()
-            Log.d("xxx", "GetMy new task  deadline ${deadline} , task name${taskNameEditText.text} , assigneeId $assignedToUserId , priority${priority}")
             if(deadline < 1  || taskNameEditText.text.isEmpty() || descriptionEditText.text.isEmpty() || assignedToUserId<1 || priority=="" || groupId<1L ){
-
                 Toast.makeText(
                     this.requireContext(),
                     "Task data is missing!",
@@ -145,13 +143,10 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
     @RequiresApi(Build.VERSION_CODES.N)
     private fun setSpinners(view: View) {
         val projectType = groups?.map{ it.groupName}
-
-        // access the spinner
         val spinner = view.findViewById<Spinner>(R.id.projectSpinner)
         if (spinner != null && projectType != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, projectType)
             spinner.adapter = adapter
-
             spinner.onItemSelectedListener = object :
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
@@ -173,8 +168,7 @@ class NewTaskFragment : Fragment(),DatePickerDialog.OnDateSetListener {
             ).show()
         }
 
-       val assignee = users?.map{ "${it.firstName} ${it.lastName}"}
-        // access the spinner
+        val assignee = users?.map{ "${it.firstName} ${it.lastName}"}
         val assigneeSpinner = view.findViewById<Spinner>(R.id.assigneeSpinner)
         if (assigneeSpinner != null && assignee != null) {
             val adapter = ArrayAdapter(requireContext(), R.layout.dropdown_item, assignee)

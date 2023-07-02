@@ -21,6 +21,8 @@ import ro.sapientia.Backend.services.exceptions.UserNotFoundException;
 import ro.sapientia.Backend.services.security.JwtTokenService;
 import ro.sapientia.Backend.services.security.SecurityUserDetailsService;
 
+import java.util.Base64;
+
 
 @Slf4j
 @RestController
@@ -41,6 +43,8 @@ public class LoginRegisterController {
     public LoginResponse login(
             @RequestBody @Valid final LoginRequest authenticationRequest) {
         try {
+            String decodedText = new String(Base64.getDecoder().decode(authenticationRequest.getPassword()));
+            authenticationRequest.setPassword(decodedText);
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             authenticationRequest.getEmail(),

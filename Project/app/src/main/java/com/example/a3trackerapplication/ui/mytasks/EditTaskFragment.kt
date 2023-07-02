@@ -93,7 +93,6 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 taskId = it.getLong("taskId")
             }
         }
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_edit_task, container, false)
     }
 
@@ -231,9 +230,6 @@ class EditTaskFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>,
                                             view: View, position: Int, id: Long) {
-//                    Toast.makeText(this@MainActivity,
-//                        getString(R.string.selected_item) + " " +
-//                                "" + languages[position], Toast.LENGTH_SHORT).show()
                     if(users != null){
                         editTaskRequest.assignedToUserId = users!![position].id
                     }

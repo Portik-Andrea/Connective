@@ -3,7 +3,6 @@ package ro.sapientia.Backend.controllers.dto;
 import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ro.sapientia.Backend.domains.Status;
 
 @Data
 @NoArgsConstructor

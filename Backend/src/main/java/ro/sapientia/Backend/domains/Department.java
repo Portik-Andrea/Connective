@@ -3,8 +3,6 @@ package ro.sapientia.Backend.domains;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "departments")

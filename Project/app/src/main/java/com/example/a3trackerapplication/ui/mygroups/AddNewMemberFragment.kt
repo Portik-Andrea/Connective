@@ -116,8 +116,6 @@ class AddNewMemberFragment : Fragment(), OnUserClickListener {
 
     override fun onSelectClick(position: Int){
         var user = searchUser?.get(position)
-        Log.d("xxx", "Getselect user response $user")
-        //var encodeMentorId = encryptId(mentor.id)
         groupMembersViewModel.addMember(AddMember(groupId!!,user!!.id))
         groupMembersViewModel.addNewMemberResponse.observe(viewLifecycleOwner){
             Toast.makeText(

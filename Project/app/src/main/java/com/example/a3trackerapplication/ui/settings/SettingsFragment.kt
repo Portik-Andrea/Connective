@@ -8,19 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import androidx.navigation.Navigation
 import androidx.navigation.fragment.findNavController
-import com.example.a3trackerapplication.MainActivity
 import com.example.a3trackerapplication.R
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class SettingsFragment : Fragment() {
     private lateinit var viewProfileTextView:TextView
     private lateinit var logoutButton: Button
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,

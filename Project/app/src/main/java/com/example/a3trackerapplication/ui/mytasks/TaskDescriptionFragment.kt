@@ -183,7 +183,6 @@ class TaskDescriptionFragment : Fragment() {
                             TaskStatus.values()[position]
                         )
                         editTaskViewModel.updateTask(editTaskRequest)
-                        Log.d("xxx", "GetMy edit task request")
                     }
                     editTaskViewModel.editTaskResult.observe(viewLifecycleOwner) {
                         if(it == "Update is successful!"){
